@@ -1,0 +1,6 @@
+<article>
+<text>
+<SENT sid="0" pm="."><plain>Research was supported by Finnish Academy (141069), ERC (ERC-2009-AdG-250050, FutureGenes) grant, Sigrid Juselius Foundation, Finnish Foundation for Cardiovascular Research (all to S.Y.); the European Research Council (ERC-2010-AdG-268804, VESSEL network), Leducq Transatlantic Network of Excellence on Lymph Vessels in Obesity and Cardiovascular Disease (11CVD03) (all to K.A.), a VENI fellowship of the Netherlands Organization of Scientific research (to J.C.S. 016.116.017); a PhD-student fellowship from the Cardiovascular Research Institute Maastricht (to T.L.T.)  </plain></SENT>
+<SENT sid="1" pm="."><plain>SD and FN acknowledge the Max Planck Society for Funding. SD acknowledges funding from the European Research Council under the European Union's Seventh Framework Programme (FP/2007–2013) ERC Grant Agreement no. 615414. OE acknowledges Deutsche Forschungsgemeinschaft (EI-520/7) and the European Research Council (ERC Grant Agreement no. 310656). Staff at the SSRL and SOLEIL synchrotron facilities (D. Vantelon) are acknowledged for technical assistance during measurements </plain></SENT>
+</text>
+</article>
