@@ -172,7 +172,7 @@ public class ValidateAccessionNumber implements Service {
     */   
    private static AbstractFaAction procAccession = new AbstractFaAction() {
       public void invoke(StringBuffer yytext, int start, DfaRun runner) {
-         LOGGER.setLevel(Level.INFO);
+         LOGGER.setLevel(Level.SEVERE);
          try { 
             Map<String, String> map = Xml.splitElement(yytext, start);
 
