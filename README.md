@@ -14,9 +14,9 @@ ant jar
 
 ### How to use?
 
-#### Dictionary format
+First, you need to create a dictionary based on mwt format.
 
-You need to build a dictionary file in mwt format as follows.
+#### MWT dictionary format
 
 ```
 <mwt>
@@ -48,10 +48,18 @@ java -cp lib/monq.jar monq.programs.DictFilter -t elem -e plain -ie UTF-8 -oe UT
 java -cp dist/AccessionNumbers.jar ukpmc.ValidateAccessionNumber -stdpipe
 ```
 
-##### Accession number mining
+##### Accession number extraction
 
 ```
 cat test/accession.txt | \
 java -cp lib/monq.jar monq.programs.DictFilter -t elem -e plain -ie UTF-8 -oe UTF-8 automata/acc150612.mwt | \
 java -cp dist/AccessionNumbers.jar ukpmc.ValidateAccessionNumber -stdpipe
 ```
+
+### Acknowledgements
+
+This work was supported by Europe PMC funders (for accession number extraction) and European Research Council (for grant id extraction).
+
+
+[1]: http://europepmc.org/articles/PMC3667078
+[2]: http://europepmc.org/abstract/MED/18006544
