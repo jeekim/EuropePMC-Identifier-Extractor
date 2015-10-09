@@ -14,7 +14,7 @@ ant jar
 
 ### How to use?
 
-First, you need to create a dictionary based on mwt format.
+You need to create a dictionary based on mwt format and format your input documents in xml.
 
 #### MWT dictionary format
 
