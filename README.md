@@ -1,6 +1,6 @@
 # Identifier Extractor
 
-A text-mining pipeline to extract identifiers such as grant ids, accession numbers etc. in free text. The pipeline mainly consists of two java programs.
+A text-mining pipeline to extract identifiers such as European Research Council grant ids in free text. The pipeline mainly consists of two java programs.
 
  1. Dictionary-based tagger. Given a dictionary, the tagger identifies terms in the dictionary using a Java Finite Automata library. 
  2. Validator. For each identified term, the validator removes erribeiys terms using several mechanisms (contextual information, online validation, etc.).
@@ -20,7 +20,7 @@ You need to create a dictionary based on mwt format and format your input docume
 
 ```
 <mwt>
-  <template><$TAG db="%1" valmethod="%2" domain="%3" context="%4" wsize="%5">%0<$TAG></template>
+  <template><acc db="%1" valmethod="%2" domain="%3" context="%4" wsize="%5">%0</acc></template>
   <r p1="$DBNAME" p2="$VALMETHOD" p3="$DOMAIN" p4="$CONTEXT" p5="$WINDOW_SIZE">$PATTERN</r>
 </mwt>
 ```
@@ -48,17 +48,9 @@ java -cp lib/monq.jar monq.programs.DictFilter -t elem -e plain -ie UTF-8 -oe UT
 java -cp dist/AccessionNumbers.jar ukpmc.ValidateAccessionNumber -stdpipe
 ```
 
-##### Accession number extraction
-
-```
-cat test/accession.txt | \
-java -cp lib/monq.jar monq.programs.DictFilter -t elem -e plain -ie UTF-8 -oe UTF-8 automata/acc150612.mwt | \
-java -cp dist/AccessionNumbers.jar ukpmc.ValidateAccessionNumber -stdpipe
-```
-
 ### Acknowledgements
 
-This work was supported by Europe PMC funders (for accession number extraction) and European Research Council (for grant id extraction).
+This work was supported by European Research Council.
 
 
 [1]: http://europepmc.org/articles/PMC3667078
