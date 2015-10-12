@@ -50,7 +50,7 @@ java -cp dist/AccessionNumbers.jar ukpmc.ValidateAccessionNumber -stdpipe
 
 ### Acknowledgements
 
-This work was supported by European Research Council.
+This work was supported by European Research Council (H2020 ERC-EuropePMC-2-2014 637529).
 
 
 [1]: http://europepmc.org/articles/PMC3667078
