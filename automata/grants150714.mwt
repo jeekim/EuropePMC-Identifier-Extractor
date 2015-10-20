@@ -6,5 +6,4 @@
   <template>%0</template>
     <r><z:[^>]*>(.*</z)!:[^>]*></r>
     <r>="([^"]*)"</r>
-  <!-- TODO filtering rules for pdb e.g., 4min, etc. -->
 </mwt>
