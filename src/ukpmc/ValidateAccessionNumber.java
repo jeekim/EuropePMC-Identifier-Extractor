@@ -371,6 +371,7 @@ public class ValidateAccessionNumber implements Service {
    /**
     * 'onlineValidate' using EB-eye
     */
+   // TODO to implement SRP
    private static String ebEyeValidate(String db, String accno) throws RemoteException, ServiceException {
       String query = "acc:\"" + accno + "\" OR id:\"" + accno + "\"";
       DomainResult rootDomain = ebeye.getDetailledNumberOfResults(db, query, true);
