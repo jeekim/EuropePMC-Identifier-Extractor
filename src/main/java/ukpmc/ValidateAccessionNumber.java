@@ -78,7 +78,7 @@ public class ValidateAccessionNumber implements Service {
     * checks that validate.properties exists and load it
     */
    private static void loadConfigurationFile() throws IOException {
-      URL url = ValidateAccessionNumber.class.getResource("resources/validate.properties");
+      URL url = ValidateAccessionNumber.class.getResource("/validate.properties");
       if (url == null) {
          throw new RuntimeException("can not find validate.properties!");
       }
@@ -95,7 +95,7 @@ public class ValidateAccessionNumber implements Service {
     */
    private static void loadPredefinedResults() throws IOException {
       String predeffilename = prop.getProperty("cached");
-      URL pURL = ValidateAccessionNumber.class.getResource("resources/" + predeffilename);
+      URL pURL = ValidateAccessionNumber.class.getResource("/" + predeffilename);
 
       BufferedReader reader = new BufferedReader(new InputStreamReader(pURL.openStream()));
       String line = reader.readLine();
@@ -118,7 +118,9 @@ public class ValidateAccessionNumber implements Service {
     */
    private static void loadDOIPrefix() throws IOException {
       String doiprefixfilename = prop.getProperty("doiblacklist");
-      URL pURL = ValidateAccessionNumber.class.getResource("resources/" + doiprefixfilename);
+      // URL pURL = ValidateAccessionNumber.class.getResource("/doi.prefix.1000.tsv");
+      // http://stackoverflow.com/questions/27360977/how-to-read-files-from-resources-folder-in-scala
+      URL pURL = ValidateAccessionNumber.class.getResource("/" + doiprefixfilename);
       BufferedReader reader = new BufferedReader(new InputStreamReader(pURL.openStream()));
       String line = reader.readLine();
 
