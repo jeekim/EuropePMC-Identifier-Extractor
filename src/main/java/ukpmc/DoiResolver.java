@@ -7,7 +7,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 public class DoiResolver implements IDResolver {
-   private String host = "data.datacite.org";
+   private String host = "data.datacite.org"; // TODO make it more generic for any sites?
    private int port = -1;
 
    private URL toURL(String doi) {

@@ -43,6 +43,7 @@ import monq.net.ServiceCreateException;
 import monq.net.ServiceFactory;
 import monq.net.TcpServer;
 
+// TODO to move to another class only for EB-eye client test.
 import uk.ac.ebi.webservices.jaxws.stubs.ebeye.*;
 import uk.ac.ebi.webservices.jaxws.EBeyeClient;
 
@@ -374,7 +375,8 @@ public class ValidateAccessionNumber implements Service {
     * 'onlineValidate' using EB-eye
     */
    // TODO to implement SRP
-   private static String ebEyeValidate(String db, String accno) throws RemoteException, ServiceException {
+   // private static String ebEyeValidate(String db, String accno) throws RemoteException, ServiceException {
+   public static String ebEyeValidate(String db, String accno) throws RemoteException, ServiceException {
       String query = "acc:\"" + accno + "\" OR id:\"" + accno + "\"";
       DomainResult rootDomain = ebeye.getDetailledNumberOfResults(db, query, true);
       String result = accno + " " + db + "" + printDomainResult(rootDomain, "");
