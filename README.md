@@ -1,5 +1,7 @@
 # Identifier Extractor
 
+[![Build Status](https://travis-ci.org/jeekim/EuropePMC-Identifier-Extractor.svg)](https://travis-ci.org/jeekim/EuropePMC-Identifier-Extractor)
+
 A text-mining pipeline to extract identifiers such as European Research Council grant ids in free text. The pipeline mainly consists of two java programs.
 
  1. Dictionary-based tagger. Given a dictionary, the tagger identifies terms in the dictionary using a Java Finite Automata library. 
