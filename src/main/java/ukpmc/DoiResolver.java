@@ -34,7 +34,7 @@ public class DoiResolver implements IDResolver {
          if (response.equals("OK")) {
             return true;
          } else {
-            return fals;
+            return false;
          }
       } catch (MalformedURLException e) {
          throw new RuntimeException(e);
