@@ -50,6 +50,8 @@ java -cp lib/monq.jar monq.programs.DictFilter -t elem -e plain -ie UTF-8 -oe UT
 java -cp target/scala-2.10/europepmc-identifier-extractor-assembly-0.1-SNAPSHOT.jar ukpmc.ValidateAccessionNumber -stdpipe
 ```
 
+##### Accession number mining
+
 ### Acknowledgements
 
 This work was supported by European Research Council (H2020 ERC-EuropePMC-2-2014 637529).
