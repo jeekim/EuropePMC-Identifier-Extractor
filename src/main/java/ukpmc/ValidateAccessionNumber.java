@@ -57,6 +57,7 @@ public class ValidateAccessionNumber implements Service {
 
    private static EBeyeClient ebeye = new EBeyeClient();
    private static DoiResolver dr = new DoiResolver();
+   private static AccResolver ar = new AccResolver();
    private static Properties prop = new Properties();
    
    private static Dfa dfa_access = null;
@@ -337,6 +338,18 @@ public class ValidateAccessionNumber implements Service {
       }
    }
 
+   public static boolean isAccValid(String domain, String accno) {
+      // acc:"IPR018060"%20OR%20id:"IPR018060" 
+      // String query = "ebisearch/ws/rest/" + domain + "?query=" + "id:\"" + accno + "\"";
+      String query = "ebisearch/ws/rest/" + domain + "?query=" + "acc:\"" + accno + "\"%20OR%20id:\"" + accno + "\"";
+      if (ar.isValidID(query)) {
+        return true;
+      } else {
+        return false;
+      }
+
+   }
+
    /**
     * pdb and uniprot is case-insensitive, but ENA is upper-case
     */
@@ -347,14 +360,15 @@ public class ValidateAccessionNumber implements Service {
       if ("doi".equals(db)) { // special case
          return isDOIValid(accno);
       } else { // EB-eye validation
-         try {
+         return isAccValid(domain, accno);
+         /* try {
             validationResult = ebEyeValidate(domain, accno);
             return isResultValid(validationResult, accno, domain);
          } catch (Exception e) {
             LOGGER.log(Level.INFO, "context", e);
-         }
+         } */
       }
-      return false;
+      // return false;
    }
 
    /**
@@ -378,6 +392,7 @@ public class ValidateAccessionNumber implements Service {
    // private static String ebEyeValidate(String db, String accno) throws RemoteException, ServiceException {
    public static String ebEyeValidate(String db, String accno) throws RemoteException, ServiceException {
       String query = "acc:\"" + accno + "\" OR id:\"" + accno + "\"";
+      // http://www.ebi.ac.uk/ebisearch/ws/rest/interpro?query=acc:%22IPR018060%22%20OR%20id:%22IPR018060%22&format=json
       DomainResult rootDomain = ebeye.getDetailledNumberOfResults(db, query, true);
       String result = accno + " " + db + "" + printDomainResult(rootDomain, "");
       LOGGER.info("ONLINE: " + result);
@@ -393,7 +408,7 @@ public class ValidateAccessionNumber implements Service {
    private static String printDomainResult(DomainResult domainRes, String indent) {
       String result = new String();
 
-      if (domainRes.getNumberOfResults().intValue() > 0) {
+      if (domainRes.getNumberOfResults().intValue() > 0) { // ???
          result = indent + " valid " + domainRes.getDomainId().getValue();
       } else {
          result = indent + " invalid " + domainRes.getDomainId().getValue();
