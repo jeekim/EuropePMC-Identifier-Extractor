@@ -55,7 +55,7 @@ public class AccResolver implements IDResolver {
        String inputLine;
 
        while ((inputLine = in.readLine()) != null) {
-         System.err.println("+++" + inputLine + "+++");
+         // System.err.println("+++" + inputLine + "+++");
 	 if (inputLine.contains("<hitCount>0</hitCount>")) {
 		 return false;
          } 	

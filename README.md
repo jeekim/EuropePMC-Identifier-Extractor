@@ -52,6 +52,12 @@ java -cp target/scala-2.10/europepmc-identifier-extractor-assembly-0.1-SNAPSHOT.
 
 ##### Accession number mining
 
+```
+cat test/accnums.txt | \
+java -cp lib/monq.jar monq.programs.DictFilter -t elem -e plain -ie UTF-8 -oe UTF-8 automata/acc150612.mwt | \
+java -cp target/scala-2.10/europepmc-identifier-extractor-assembly-0.1-SNAPSHOT.jar ukpmc.ValidateAccessionNumber -stdpipe
+```
+
 ### Acknowledgements
 
 This work was supported by European Research Council (H2020 ERC-EuropePMC-2-2014 637529).
