@@ -11,7 +11,7 @@ class DoiResolverSpec extends FlatSpec with Matchers {
     // DoiResolver.isValidID("10.5061/dryad.pk045") should be (true)
   }
 
-  /*"EB-eye Validator" should "validate the example accession number as true" in {
+  "EB-eye Validator" should "validate the example accession number as true" in {
     ValidateAccessionNumber.ebEyeValidate("interpro", "ipr018060")
-  } */
+  }
 }
