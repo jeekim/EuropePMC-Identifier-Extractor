@@ -27,9 +27,8 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import java.rmi.RemoteException;
-
-import javax.xml.rpc.ServiceException;
+// import java.rmi.RemoteException;
+// import javax.xml.rpc.ServiceException;
 
 import monq.jfa.AbstractFaAction;
 import monq.jfa.Dfa;
@@ -44,8 +43,8 @@ import monq.net.ServiceFactory;
 import monq.net.TcpServer;
 
 // TODO to move to another class only for EB-eye client test.
-import uk.ac.ebi.webservices.jaxws.stubs.ebeye.*;
-import uk.ac.ebi.webservices.jaxws.EBeyeClient;
+// import uk.ac.ebi.webservices.jaxws.stubs.ebeye.*;
+// import uk.ac.ebi.webservices.jaxws.EBeyeClient;
 
 
 @SuppressWarnings("serial")
@@ -55,7 +54,7 @@ public class ValidateAccessionNumber implements Service {
 
    private static TcpServer svr = null;
 
-   private static EBeyeClient ebeye = new EBeyeClient();
+   // private static EBeyeClient ebeye = new EBeyeClient();
    private static DoiResolver dr = new DoiResolver();
    private static AccResolver ar = new AccResolver();
    private static Properties prop = new Properties();
@@ -390,7 +389,7 @@ public class ValidateAccessionNumber implements Service {
     */
    // TODO to implement SRP
    // private static String ebEyeValidate(String db, String accno) throws RemoteException, ServiceException {
-   public static String ebEyeValidate(String db, String accno) throws RemoteException, ServiceException {
+   /* public static String ebEyeValidate(String db, String accno) throws RemoteException, ServiceException {
       String query = "acc:\"" + accno + "\" OR id:\"" + accno + "\"";
       // http://www.ebi.ac.uk/ebisearch/ws/rest/interpro?query=acc:%22IPR018060%22%20OR%20id:%22IPR018060%22&format=json
       DomainResult rootDomain = ebeye.getDetailledNumberOfResults(db, query, true);
@@ -398,14 +397,14 @@ public class ValidateAccessionNumber implements Service {
       LOGGER.info("ONLINE: " + result);
 
       return result;
-   }
+   } */
 
    /** Recursive method to print tree of domain results. 
    * 
    * @param domainDes Domain result node from tree.
    * @param indent Prefix string providing indent for this level in the tree.
    */
-   private static String printDomainResult(DomainResult domainRes, String indent) {
+   /* private static String printDomainResult(DomainResult domainRes, String indent) {
       String result = new String();
 
       if (domainRes.getNumberOfResults().intValue() > 0) { // ???
@@ -414,7 +413,7 @@ public class ValidateAccessionNumber implements Service {
          result = indent + " invalid " + domainRes.getDomainId().getValue();
       }
       return result;
-   }
+   } */
 
    static {     
 
