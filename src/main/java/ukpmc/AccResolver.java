@@ -28,24 +28,6 @@ public class AccResolver implements IDResolver {
       return doi;
    }
 
-   /* public boolean isValidID(String doi) {
-      try {
-         URL url = toURL(doi);
-	 System.err.println(url);
-         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-         String response = connection.getResponseMessage();
-         connection.disconnect();
-         if (response.equals("OK")) {
-            return true;
-         } else {
-            return false;
-         }
-      } catch (MalformedURLException e) {
-         throw new RuntimeException(e);
-      } catch (IOException e) {
-         throw new RuntimeException(e);
-      }
-   } */
 
    public boolean isValidID(String doi)  {
      try {
@@ -55,7 +37,6 @@ public class AccResolver implements IDResolver {
        String inputLine;
 
        while ((inputLine = in.readLine()) != null) {
-         // System.err.println("+++" + inputLine + "+++");
 	 if (inputLine.contains("<hitCount>0</hitCount>")) {
 		 return false;
          } 	
