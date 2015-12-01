@@ -5,7 +5,7 @@ package ukpmc;
  * 
  * Author: Jee-Hyub Kim
  *
- * Looks for <z:acc> elements and attempts to validate the accession number
+ * Looks for tagged elements and attempts to validate the accession number
  * 
  */
 
@@ -50,7 +50,7 @@ public class ValidateAccessionNumber implements Service {
    private static DoiResolver dr = new DoiResolver();
    private static AccResolver ar = new AccResolver();
    
-   private static Dfa dfa_boundary = null;
+   protected static Dfa dfa_boundary = null;
    private static Dfa dfa_entity = null;
    
    private static Map<String, String> cachedValidations = new HashMap<String, String>();
@@ -268,11 +268,11 @@ public class ValidateAccessionNumber implements Service {
       int dotIndex = id.indexOf("."); // if it's a dotted Accession number, then only test the prefix
 
       if (dotIndex != -1 && !"doi".equals(db)) {
-         id = id.substring(0, dotIndex);
+        id = id.substring(0, dotIndex);
       }
 
       if (")".equals(id.substring(id.length() - 1))) {
-         id = id.substring(0, id.length() - 1);
+        id = id.substring(0, id.length() - 1);
       }
       return id.toUpperCase();
    }
@@ -285,7 +285,7 @@ public class ValidateAccessionNumber implements Service {
       int bsIndex = doi.indexOf("/");
 
       if (bsIndex != -1) {
-         prefix = doi.substring(0, bsIndex);
+        prefix = doi.substring(0, bsIndex);
       }           
       return prefix;
    }
@@ -312,7 +312,7 @@ public class ValidateAccessionNumber implements Service {
    /**
     *
     */
-   public static boolean isDOIValid(String doi) { // TODO move to DoiResolver?
+   public static boolean isDOIValid(String doi) {
       if (cachedDoiPrefix.containsKey(prefixDOI(doi))) {
          LOGGER.info(doi + ": in the black list.");
          return false;
@@ -328,7 +328,6 @@ public class ValidateAccessionNumber implements Service {
       }
    }
 
-   // TODO move to ...
    public static boolean isAccValid(String domain, String accno) {
       if (ar.isValidID(domain, accno)) {
         return true;

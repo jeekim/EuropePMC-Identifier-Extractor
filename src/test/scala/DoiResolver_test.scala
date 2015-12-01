@@ -1,31 +1,32 @@
 package ukpmc
 
 import ukpmc._
+import monq.jfa._
 import org.scalatest._
 
 class DoiResolverSpec extends FlatSpec with Matchers {
-  "DOI Resolver" should "validate the example DOI as true" in {
+  "doiResolver.isValidID" should "validate 10.5061/dryad.pk045 as true" in {
     val doiResolver = new DoiResolver
     doiResolver.isValidID("doi", "10.5061/dryad.pk045") should be (true)
   }
 
-  "DOI Resolver2" should "validate the example DOI as false" in {
+  "isDOIValid" should "validate 10.5061/dryad.pk045dd as false" in {
     ValidateAccessionNumber.isDOIValid("10.5061/dryad.pk045dd") should be (false)
   }
 
-  "Acc online Validator" should "validate the example accession number as true" in {
+  "isAccValid" should "validate interpro, ipr018060 as true" in {
     ValidateAccessionNumber.isAccValid("interpro", "ipr018060") should be (true)
   }
 
-  "Acc online Validator2" should "validate the example accession number as false" in {
+  "isAccValid" should "validate interpro, ipr01806000 as false" in {
     ValidateAccessionNumber.isAccValid("interpro", "ipr01806000") should be (false)
   }
 
-  "Cached Validator" should "validate the example accession number as true" in {
+  "isCachedValid" should "validate pfam, PF00003 as true" in {
     ValidateAccessionNumber.isCachedValid("pfam", "PF00003", "pfam") should be (true)
   }
 
-  "Cached Validator2" should "validate pf00003333 number as false" in {
+  "isCachedValid" should "validate pfam, pf00003333 as false" in {
     ValidateAccessionNumber.isCachedValid("pfam", "pf00003333", "pfam") should be (false)
   }
 
@@ -37,5 +38,8 @@ class DoiResolverSpec extends FlatSpec with Matchers {
     ValidateAccessionNumber.prefixDOI("10.5061/dryad.pk045") should be ("10.5061")
   }
 
-  // TODO a test given a sentence
+  "dfa_boundary" should "validate ..." in {
+    val dfaRun = new DfaRun(ValidateAccessionNumber.dfa_boundary)
+    dfaRun.filter("""<SENT sid="34" pm="."><plain>omim <z:acc db="omim" valmethod="onlineWithContext" domain="omim" context="(?i)(o*mim)" wsize="20">603878</z:acc></plain></SENT>""") should be ("""<SENT sid="34" pm="."><plain>omim <z:acc db="omim" ids="603878">603878</z:acc></plain></SENT>""")
+  }
 }
