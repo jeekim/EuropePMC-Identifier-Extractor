@@ -15,23 +15,22 @@ public class DoiResolver implements IDResolver {
 
    private URL toURL(String doi) {
       try {
-         URL url = new URL("http", host, port, 
-           '/' + doi.replaceAll("#", "%23").replaceAll("\\[", "%5B").replaceAll("\\]", "%5D"));
-         return url;
+        URL url = new URL("http", host, port, '/' + doi.replaceAll("#", "%23").replaceAll("\\[", "%5B").replaceAll("\\]", "%5D"));
+        return url;
       } catch (MalformedURLException e) {
-         throw new IllegalArgumentException();
+        throw new IllegalArgumentException();
       }
    }
 
-   private String toString(URL url) {
+   /* private String toString(URL url) {
       String doi = url.getPath().substring(1).replaceAll("%23", "#").replaceAll("%5B", "\\[").replaceAll("%5D", "\\]");
       return doi;
-   }
+   } */
 
-   public boolean isValidID(String doi) {
+   public boolean isValidID(String domain, String doi) {
 
-      QueryGenerator qg = new QueryGenerator(10);
-      System.err.println(qg);
+      // QueryGenerator qg = new QueryGenerator("10101");
+      // System.err.println(qg);
 
       try {
          URL url = toURL(doi);

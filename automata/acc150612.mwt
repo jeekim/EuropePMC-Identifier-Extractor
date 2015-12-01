@@ -67,7 +67,7 @@
   <template>%0</template>
     <r><z:[^>]*>(.*</z)!:[^>]*></r>
     <r>="([^">]*)"</r>
-  <!-- TODO filtering rules for pdb e.g., 4min, etc. -->
-    <!--r>[0-9]+day</r-->
+    <!-- TODO filtering rules for pdb e.g., 4min, etc. -->
+    <r>[0-9]+day</r>
     <r>[0-9][0-9][0-9][0-9]</r>
 </mwt>

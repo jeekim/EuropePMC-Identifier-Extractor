@@ -3,7 +3,7 @@ package ukpmc;
 /**
  * Validate Accession Number spotting
  * 
- * Authors: Ian Lewin and Jee-Hyub Kim
+ * Author: Jee-Hyub Kim
  *
  * Looks for <z:acc> elements and attempts to validate the accession number
  * 
@@ -27,9 +27,6 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-// import java.rmi.RemoteException;
-// import javax.xml.rpc.ServiceException;
-
 import monq.jfa.AbstractFaAction;
 import monq.jfa.Dfa;
 import monq.jfa.DfaRun;
@@ -42,11 +39,6 @@ import monq.net.ServiceCreateException;
 import monq.net.ServiceFactory;
 import monq.net.TcpServer;
 
-// TODO to move to another class only for EB-eye client test.
-// import uk.ac.ebi.webservices.jaxws.stubs.ebeye.*;
-// import uk.ac.ebi.webservices.jaxws.EBeyeClient;
-
-
 @SuppressWarnings("serial")
 public class ValidateAccessionNumber implements Service {
 
@@ -54,13 +46,12 @@ public class ValidateAccessionNumber implements Service {
 
    private static TcpServer svr = null;
 
-   // private static EBeyeClient ebeye = new EBeyeClient();
+   private static Properties prop = new Properties();
    private static DoiResolver dr = new DoiResolver();
    private static AccResolver ar = new AccResolver();
-   private static Properties prop = new Properties();
    
-   private static Dfa dfa_access = null;
    private static Dfa dfa_boundary = null;
+   private static Dfa dfa_entity = null;
    
    private static Map<String, String> cachedValidations = new HashMap<String, String>();
    private static Map<String, String> cachedDoiPrefix = new HashMap<String, String>();
@@ -80,9 +71,7 @@ public class ValidateAccessionNumber implements Service {
     */
    private static void loadConfigurationFile() throws IOException {
       URL url = ValidateAccessionNumber.class.getResource("/validate.properties");
-      if (url == null) {
-         throw new RuntimeException("can not find validate.properties!");
-      }
+      if (url == null) { throw new RuntimeException("can not find validate.properties!"); }
       prop.load(url.openStream());
    }
 
@@ -118,9 +107,8 @@ public class ValidateAccessionNumber implements Service {
     * Read the stored list of DOI prefixes for articles only
     */
    private static void loadDOIPrefix() throws IOException {
-      String doiprefixfilename = prop.getProperty("doiblacklist");
-      // URL pURL = ValidateAccessionNumber.class.getResource("/doi.prefix.1000.tsv");
       // http://stackoverflow.com/questions/27360977/how-to-read-files-from-resources-folder-in-scala
+      String doiprefixfilename = prop.getProperty("doiblacklist");
       URL pURL = ValidateAccessionNumber.class.getResource("/" + doiprefixfilename);
       BufferedReader reader = new BufferedReader(new InputStreamReader(pURL.openStream()));
       String line = reader.readLine();
@@ -151,6 +139,7 @@ public class ValidateAccessionNumber implements Service {
 
    /**
     *
+    *
     */
    private static AbstractFaAction procBoundary = new AbstractFaAction() {
       public void invoke(StringBuffer yytext, int start, DfaRun runner) {
@@ -158,8 +147,8 @@ public class ValidateAccessionNumber implements Service {
          try {
             Map <String, String> map = Xml.splitElement(yytext, start);
             String xmlcontent = map.get(Xml.CONTENT);
-            DfaRun procplain = new DfaRun(dfa_access);
-            String newoutput = procplain.filter(xmlcontent);
+            DfaRun dfaRunEntity = new DfaRun(dfa_entity);
+            String newoutput = dfaRunEntity.filter(xmlcontent);
             String embedcontent = reEmbedContent(newoutput, yytext, map, start);
             yytext.replace(start, yytext.length(), embedcontent);
          } catch (Exception e) {
@@ -173,7 +162,7 @@ public class ValidateAccessionNumber implements Service {
     *  This processes an accession number
     *  noval: refseq, refsnp, context: eudract offline: pfam, online (+ offline): the rest
     */   
-   private static AbstractFaAction procAccession = new AbstractFaAction() {
+   private static AbstractFaAction procEntity = new AbstractFaAction() {
       public void invoke(StringBuffer yytext, int start, DfaRun runner) {
          LOGGER.setLevel(Level.SEVERE);
          try { 
@@ -185,9 +174,10 @@ public class ValidateAccessionNumber implements Service {
             String domain = map.get("domain");
             String context = map.get("context");
             String wsize = map.get("wsize");
+	    String tagname = prop.getProperty("entity");
+            String tagged = "<" + tagname +" db=\"" + db + "\" ids=\"" + xmlcontent +"\">" + xmlcontent + "</" + tagname + ">";
 
             LOGGER.info(db + ": " + ":" + xmlcontent + ":" + valmethod + ": " + domain + ": " + context + ":" + start + ":");
-            String tagged = "<z:acc db=\"" + db + "\" ids=\"" + xmlcontent +"\">" + xmlcontent + "</z:acc>";
 
             if ("noval".equals(valmethod)) {
                LOGGER.info(xmlcontent + ": in the noval.");
@@ -195,7 +185,6 @@ public class ValidateAccessionNumber implements Service {
                yytext.replace(start, yytext.length(), tagged);
                return;
             }
-
 
             if (valmethod.matches("(.*)contextOnly(.*)")) {
                if (isAnySameTypeBefore(db) || isInContext(yytext, start, context, wsize)) {
@@ -208,7 +197,7 @@ public class ValidateAccessionNumber implements Service {
 
             if (valmethod.matches("(.*)WithContext(.*)")) {
                if (valmethod.matches("(.*)cached(.*)")) {
-                  if (isCachedValid(db, xmlcontent, domain) && (isAnySameTypeBefore(db) || isInContext(yytext, start, context, wsize))) {
+                  if ((isAnySameTypeBefore(db) || isInContext(yytext, start, context, wsize)) && isCachedValid(db, xmlcontent, domain)) {
                      LOGGER.info(xmlcontent + ": in the cache with context.");
                      numOfAccInBoundary.put(db, 1);
                      yytext.replace(start, yytext.length(), tagged);
@@ -241,7 +230,7 @@ public class ValidateAccessionNumber implements Service {
                   }
                }
             }
-            yytext.replace(start, yytext.length(), xmlcontent);
+            yytext.replace(start, yytext.length(), xmlcontent); // default rule
 
          } catch (Exception e) {
             LOGGER.log(Level.INFO, "context", e);
@@ -264,9 +253,7 @@ public class ValidateAccessionNumber implements Service {
       Integer wSize = Integer.parseInt(wsize);
       Integer pStart = start - wSize;
 
-      if (pStart < 0) {
-         pStart = 0;
-      }
+      if (pStart < 0) { pStart = 0; }
 
       Pattern p = Pattern.compile(context);
       Matcher m = p.matcher(yytext.substring(pStart, start));
@@ -277,22 +264,23 @@ public class ValidateAccessionNumber implements Service {
    /**
     * normalize accession numbers for cached and online validation
     */
-   private static String normalizeAcc(String db, String accno) {
-      int dotIndex = accno.indexOf("."); // if it's a dotted Accession number, then only test the prefix
+   public static String normalizeID(String db, String id) {
+      int dotIndex = id.indexOf("."); // if it's a dotted Accession number, then only test the prefix
 
       if (dotIndex != -1 && !"doi".equals(db)) {
-         accno = accno.substring(0, dotIndex);
+         id = id.substring(0, dotIndex);
       }
-      if (")".equals(accno.substring(accno.length() - 1))) {
-         accno = accno.substring(0, accno.length() - 1);
+
+      if (")".equals(id.substring(id.length() - 1))) {
+         id = id.substring(0, id.length() - 1);
       }
-      return accno.toUpperCase();
+      return id.toUpperCase();
    }
 
    /**
     * return a prefix of a DOI
     */
-   private static String prefixDOI(String doi) {
+   public static String prefixDOI(String doi) {
       String prefix = new String();
       int bsIndex = doi.indexOf("/");
 
@@ -304,14 +292,18 @@ public class ValidateAccessionNumber implements Service {
 
    /**
     *
+    *
     */
-   private static boolean isCachedValid(String db, String accno, String domain) {
-      String validationResult = new String();
-      accno = normalizeAcc(db, accno);
+   public static boolean isCachedValid(String db, String accno, String domain) {
+      accno = normalizeID(db, accno);
 
       if (cachedValidations.containsKey(domain + accno)) {
-         validationResult = cachedValidations.get(domain + accno);
-         return isResultValid(validationResult, accno, domain);
+        String res = cachedValidations.get(domain + accno);
+        if (res.indexOf(" valid " + domain) != -1) {
+           return true;
+        } else { // " invalid "
+           return false;
+        }
       } else {
         return false;
       }
@@ -320,28 +312,25 @@ public class ValidateAccessionNumber implements Service {
    /**
     *
     */
-   private static boolean isDOIValid(String accno) { // TODO move to DoiResolver?
-      if (cachedDoiPrefix.containsKey(prefixDOI(accno))) {
-         LOGGER.info(accno + ": in the black list.");
+   public static boolean isDOIValid(String doi) { // TODO move to DoiResolver?
+      if (cachedDoiPrefix.containsKey(prefixDOI(doi))) {
+         LOGGER.info(doi + ": in the black list.");
          return false;
-      }
-      if ("10.2210/".equals(accno.substring(0, 8))) { // exception rule for PDB data center
-         LOGGER.info(accno + ": in PDB data center.");
+      } else if ("10.2210/".equals(doi.substring(0, 8))) { // exception rule for PDB data center
+         LOGGER.info(doi + ": in PDB data center.");
          return true;
-      } else if (dr.isValidID(accno)) {
-         LOGGER.info(accno + ": is a valid id.");
+      } else if (dr.isValidID("doi", doi)) {
+         LOGGER.info(doi + ": is a valid id.");
          return true;
       } else {
-         LOGGER.info(accno + ": is not a valid id.");
+         LOGGER.info(doi + ": is not a valid id.");
          return false;
       }
    }
 
+   // TODO move to ...
    public static boolean isAccValid(String domain, String accno) {
-      // acc:"IPR018060"%20OR%20id:"IPR018060" 
-      // String query = "ebisearch/ws/rest/" + domain + "?query=" + "id:\"" + accno + "\"";
-      String query = "ebisearch/ws/rest/" + domain + "?query=" + "acc:\"" + accno + "\"%20OR%20id:\"" + accno + "\"";
-      if (ar.isValidID(query)) {
+      if (ar.isValidID(domain, accno)) {
         return true;
       } else {
         return false;
@@ -352,68 +341,16 @@ public class ValidateAccessionNumber implements Service {
    /**
     * pdb and uniprot is case-insensitive, but ENA is upper-case
     */
-   private static boolean isOnlineValid(String db, String accno, String domain) {
-      String validationResult = new String();
-      accno = normalizeAcc(db, accno);
+   public static boolean isOnlineValid(String db, String id, String domain) {
+      id = normalizeID(db, id);
 
-      if ("doi".equals(db)) { // special case
-         return isDOIValid(accno);
-      } else { // EB-eye validation
-         return isAccValid(domain, accno);
-         /* try {
-            validationResult = ebEyeValidate(domain, accno);
-            return isResultValid(validationResult, accno, domain);
-         } catch (Exception e) {
-            LOGGER.log(Level.INFO, "context", e);
-         } */
-      }
-      // return false;
-   }
-
-   /**
-    *
-    */
-   private static boolean isResultValid(String validationResult, String accno, String domain) {
-      if (validationResult.indexOf(" valid " + domain) != -1) {
-         if (!cachedValidations.containsKey(domain + accno)) {
-            cachedValidations.put(domain + accno, validationResult);
-         }
-         return true;
+      if ("doi".equals(db)) { // if id is a doi
+         return isDOIValid(id);
       } else {
-         return false;
+         return isAccValid(domain, id);
       }
    }
 
-   /**
-    * 'onlineValidate' using EB-eye
-    */
-   // TODO to implement SRP
-   // private static String ebEyeValidate(String db, String accno) throws RemoteException, ServiceException {
-   /* public static String ebEyeValidate(String db, String accno) throws RemoteException, ServiceException {
-      String query = "acc:\"" + accno + "\" OR id:\"" + accno + "\"";
-      // http://www.ebi.ac.uk/ebisearch/ws/rest/interpro?query=acc:%22IPR018060%22%20OR%20id:%22IPR018060%22&format=json
-      DomainResult rootDomain = ebeye.getDetailledNumberOfResults(db, query, true);
-      String result = accno + " " + db + "" + printDomainResult(rootDomain, "");
-      LOGGER.info("ONLINE: " + result);
-
-      return result;
-   } */
-
-   /** Recursive method to print tree of domain results. 
-   * 
-   * @param domainDes Domain result node from tree.
-   * @param indent Prefix string providing indent for this level in the tree.
-   */
-   /* private static String printDomainResult(DomainResult domainRes, String indent) {
-      String result = new String();
-
-      if (domainRes.getNumberOfResults().intValue() > 0) { // ???
-         result = indent + " valid " + domainRes.getDomainId().getValue();
-      } else {
-         result = indent + " invalid " + domainRes.getDomainId().getValue();
-      }
-      return result;
-   } */
 
    static {     
 
@@ -423,12 +360,14 @@ public class ValidateAccessionNumber implements Service {
          loadPredefinedResults();
 
          Nfa anfa = new Nfa(Nfa.NOTHING);
-         anfa.or(Xml.GoofedElement("z:acc"), procAccession); // TODO from property
-         dfa_access = anfa.compile(DfaRun.UNMATCHED_COPY);
+         anfa.or(Xml.GoofedElement(prop.getProperty("entity")), procEntity);
+         dfa_entity = anfa.compile(DfaRun.UNMATCHED_COPY);
 
          Nfa bnfa = new Nfa(Nfa.NOTHING);
-         bnfa.or(Xml.GoofedElement(prop.getProperty("boundary")), procBoundary); // TODO explore with <article>, <text> and <SENT>?
+         bnfa.or(Xml.GoofedElement(prop.getProperty("boundary")), procBoundary);
          dfa_boundary = bnfa.compile(DfaRun.UNMATCHED_COPY);
+	  
+         LOGGER.warning(prop.getProperty("boundary"));
 
       } catch (Exception e) {
          LOGGER.log(Level.INFO, "context", e);
