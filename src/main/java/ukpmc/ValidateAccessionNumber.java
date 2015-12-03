@@ -39,8 +39,11 @@ import monq.net.ServiceCreateException;
 import monq.net.ServiceFactory;
 import monq.net.TcpServer;
 
+import ukpmc.scala.Dictionary;
+
 @SuppressWarnings("serial")
 public class ValidateAccessionNumber implements Service {
+
 
    private static final Logger LOGGER = Logger.getLogger(ValidateAccessionNumber.class.getName()); 
 
@@ -56,6 +59,8 @@ public class ValidateAccessionNumber implements Service {
    private static Map<String, String> cachedValidations = new HashMap<String, String>();
    private static Map<String, String> cachedDoiPrefix = new HashMap<String, String>();
    private static Map<String, Integer> numOfAccInBoundary = new HashMap<String, Integer>();
+   // Integer for position? Integer => Mention(Position, Acc)
+   // <z:acc db="omim" ids="603878-603890">603878 to 603890</z:acc>
  
    private InputStream in = null;
    private OutputStream out = null;
@@ -73,6 +78,7 @@ public class ValidateAccessionNumber implements Service {
       URL url = ValidateAccessionNumber.class.getResource("/validate.properties");
       if (url == null) { throw new RuntimeException("can not find validate.properties!"); }
       prop.load(url.openStream());
+      // System.err.println(Dictionary.MAX_SIZE());
    }
 
    /**
@@ -143,6 +149,7 @@ public class ValidateAccessionNumber implements Service {
     */
    private static AbstractFaAction procBoundary = new AbstractFaAction() {
       public void invoke(StringBuffer yytext, int start, DfaRun runner) {
+	 // when a boundary in a table, expands the boundary
          numOfAccInBoundary = new HashMap<String, Integer>();
          try {
             Map <String, String> map = Xml.splitElement(yytext, start);
@@ -179,58 +186,53 @@ public class ValidateAccessionNumber implements Service {
 
             LOGGER.info(db + ": " + ":" + xmlcontent + ":" + valmethod + ": " + domain + ": " + context + ":" + start + ":");
 
+	    boolean useTagged = false;
+
             if ("noval".equals(valmethod)) {
                LOGGER.info(xmlcontent + ": in the noval.");
                numOfAccInBoundary.put(db, 1);
-               yytext.replace(start, yytext.length(), tagged);
-               return;
-            }
-
-            if (valmethod.matches("(.*)contextOnly(.*)")) {
+	       useTagged = true;
+            } else if (valmethod.matches("(.*)contextOnly(.*)")) {
                if (isAnySameTypeBefore(db) || isInContext(yytext, start, context, wsize)) {
                   LOGGER.info(xmlcontent + ": in the context.");
                   numOfAccInBoundary.put(db, 1);
-                  yytext.replace(start, yytext.length(), tagged);
-                  return;
+	          useTagged = true;
                }
-            }
-
-            if (valmethod.matches("(.*)WithContext(.*)")) {
+            } else if (valmethod.matches("(.*)WithContext(.*)")) {
                if (valmethod.matches("(.*)cached(.*)")) {
                   if ((isAnySameTypeBefore(db) || isInContext(yytext, start, context, wsize)) && isCachedValid(db, xmlcontent, domain)) {
                      LOGGER.info(xmlcontent + ": in the cache with context.");
                      numOfAccInBoundary.put(db, 1);
-                     yytext.replace(start, yytext.length(), tagged);
-                     return;
+	             useTagged = true;
                   }
-               }
-               if (valmethod.matches("(.*)online(.*)")) {
+               } else if (valmethod.matches("(.*)online(.*)")) {
                   if ((isAnySameTypeBefore(db) || isInContext(yytext, start, context, wsize)) && isOnlineValid(db, xmlcontent, domain)) {
                      LOGGER.info(xmlcontent + ": in the online with context.");
                      numOfAccInBoundary.put(db, 1);
-                     yytext.replace(start, yytext.length(), tagged);
-                     return;
+	             useTagged = true;
                   }
                }
-            } else {
+            } else { // WithoutContext
                if (valmethod.matches("(.*)cached(.*)")) {
                   if (isCachedValid(db, xmlcontent, domain)) {
                      LOGGER.info(xmlcontent + ": in the cache.");
                      numOfAccInBoundary.put(db, 1);
-                     yytext.replace(start, yytext.length(), tagged);
-                     return;
+	             useTagged = true;
                   }
-               }
-               if (valmethod.matches("(.*)online(.*)")) {
+               } else if (valmethod.matches("(.*)online(.*)")) {
                   if (isOnlineValid(db, xmlcontent, domain)) {
                      LOGGER.info(xmlcontent + ": in the online.");
                      numOfAccInBoundary.put(db, 1);
-                     yytext.replace(start, yytext.length(), tagged);
-                     return;
+	             useTagged = true;
                   }
                }
             }
-            yytext.replace(start, yytext.length(), xmlcontent); // default rule
+
+	    if (useTagged) {
+              yytext.replace(start, yytext.length(), tagged);
+	    } else {
+              yytext.replace(start, yytext.length(), xmlcontent); // default rule
+	    }
 
          } catch (Exception e) {
             LOGGER.log(Level.INFO, "context", e);
@@ -241,7 +243,7 @@ public class ValidateAccessionNumber implements Service {
    /**
     *
     */
-   private static boolean isAnySameTypeBefore(String db) {
+   private static boolean isAnySameTypeBefore(String db) { // Can I use this for a range?
       if ("erc".equals(db)) { return false; }
       return numOfAccInBoundary.containsKey(db);
    }
@@ -362,8 +364,10 @@ public class ValidateAccessionNumber implements Service {
          anfa.or(Xml.GoofedElement(prop.getProperty("entity")), procEntity);
          dfa_entity = anfa.compile(DfaRun.UNMATCHED_COPY);
 
+	 // <z:acc db="%1" valmethod="%2" domain="%3" context="%4" wsize="%5" boundary="???">
          Nfa bnfa = new Nfa(Nfa.NOTHING);
          bnfa.or(Xml.GoofedElement(prop.getProperty("boundary")), procBoundary);
+	 // .or ... table ... <table> ... <s> </s> <s> </s> ... </table>
          dfa_boundary = bnfa.compile(DfaRun.UNMATCHED_COPY);
 	  
          LOGGER.warning(prop.getProperty("boundary"));

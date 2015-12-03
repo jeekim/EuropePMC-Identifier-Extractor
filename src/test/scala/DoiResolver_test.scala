@@ -42,4 +42,6 @@ class DoiResolverSpec extends FlatSpec with Matchers {
     val dfaRun = new DfaRun(ValidateAccessionNumber.dfa_boundary)
     dfaRun.filter("""<SENT sid="34" pm="."><plain>omim <z:acc db="omim" valmethod="onlineWithContext" domain="omim" context="(?i)(o*mim)" wsize="20">603878</z:acc></plain></SENT>""") should be ("""<SENT sid="34" pm="."><plain>omim <z:acc db="omim" ids="603878">603878</z:acc></plain></SENT>""")
   }
+
+  // <z:acc db="omim" ids="603878-603890">603878 to 603890</z:acc>
 }
