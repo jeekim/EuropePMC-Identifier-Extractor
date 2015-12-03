@@ -183,55 +183,42 @@ public class ValidateAccessionNumber implements Service {
             String wsize = map.get("wsize");
 	    String tagname = prop.getProperty("entity");
             String tagged = "<" + tagname +" db=\"" + db + "\" ids=\"" + xmlcontent +"\">" + xmlcontent + "</" + tagname + ">";
-
             LOGGER.info(db + ": " + ":" + xmlcontent + ":" + valmethod + ": " + domain + ": " + context + ":" + start + ":");
-
 	    boolean useTagged = false;
 
             if ("noval".equals(valmethod)) {
-               LOGGER.info(xmlcontent + ": in the noval.");
-               numOfAccInBoundary.put(db, 1);
 	       useTagged = true;
             } else if (valmethod.matches("(.*)contextOnly(.*)")) {
                if (isAnySameTypeBefore(db) || isInContext(yytext, start, context, wsize)) {
-                  LOGGER.info(xmlcontent + ": in the context.");
-                  numOfAccInBoundary.put(db, 1);
 	          useTagged = true;
                }
             } else if (valmethod.matches("(.*)WithContext(.*)")) {
                if (valmethod.matches("(.*)cached(.*)")) {
                   if ((isAnySameTypeBefore(db) || isInContext(yytext, start, context, wsize)) && isCachedValid(db, xmlcontent, domain)) {
-                     LOGGER.info(xmlcontent + ": in the cache with context.");
-                     numOfAccInBoundary.put(db, 1);
 	             useTagged = true;
                   }
                } else if (valmethod.matches("(.*)online(.*)")) {
                   if ((isAnySameTypeBefore(db) || isInContext(yytext, start, context, wsize)) && isOnlineValid(db, xmlcontent, domain)) {
-                     LOGGER.info(xmlcontent + ": in the online with context.");
-                     numOfAccInBoundary.put(db, 1);
 	             useTagged = true;
                   }
                }
             } else { // WithoutContext
                if (valmethod.matches("(.*)cached(.*)")) {
                   if (isCachedValid(db, xmlcontent, domain)) {
-                     LOGGER.info(xmlcontent + ": in the cache.");
-                     numOfAccInBoundary.put(db, 1);
 	             useTagged = true;
                   }
                } else if (valmethod.matches("(.*)online(.*)")) {
                   if (isOnlineValid(db, xmlcontent, domain)) {
-                     LOGGER.info(xmlcontent + ": in the online.");
-                     numOfAccInBoundary.put(db, 1);
 	             useTagged = true;
                   }
                }
             }
 
 	    if (useTagged) {
+              numOfAccInBoundary.put(db, 1);
               yytext.replace(start, yytext.length(), tagged);
 	    } else {
-              yytext.replace(start, yytext.length(), xmlcontent); // default rule
+              yytext.replace(start, yytext.length(), xmlcontent); // no tagging
 	    }
 
          } catch (Exception e) {
@@ -254,42 +241,10 @@ public class ValidateAccessionNumber implements Service {
    private static boolean isInContext(StringBuffer yytext, int start, String context, String wsize) {
       Integer wSize = Integer.parseInt(wsize);
       Integer pStart = start - wSize;
-
       if (pStart < 0) { pStart = 0; }
-
       Pattern p = Pattern.compile(context);
       Matcher m = p.matcher(yytext.substring(pStart, start));
-
       return m.find();
-   }
-
-   /**
-    * normalize accession numbers for cached and online validation
-    */
-   public static String normalizeID(String db, String id) {
-      int dotIndex = id.indexOf("."); // if it's a dotted Accession number, then only test the prefix
-
-      if (dotIndex != -1 && !"doi".equals(db)) {
-        id = id.substring(0, dotIndex);
-      }
-
-      if (")".equals(id.substring(id.length() - 1))) {
-        id = id.substring(0, id.length() - 1);
-      }
-      return id.toUpperCase();
-   }
-
-   /**
-    * return a prefix of a DOI
-    */
-   public static String prefixDOI(String doi) {
-      String prefix = new String();
-      int bsIndex = doi.indexOf("/");
-
-      if (bsIndex != -1) {
-        prefix = doi.substring(0, bsIndex);
-      }           
-      return prefix;
    }
 
    /**
@@ -308,6 +263,20 @@ public class ValidateAccessionNumber implements Service {
         }
       } else {
         return false;
+      }
+   }
+
+   /**
+    * pdb and uniprot is case-insensitive, but ENA is upper-case
+    */
+   public static boolean isOnlineValid(String db, String id, String domain) {
+      id = normalizeID(db, id);
+
+      if ("doi".equals(db)) { // if id is a doi
+         return isDOIValid(id);
+      } else {
+         return isAccValid(domain, id);
+	 // return ar.isValidID(domain, id);
       }
    }
 
@@ -336,20 +305,31 @@ public class ValidateAccessionNumber implements Service {
       } else {
         return false;
       }
-
    }
 
    /**
-    * pdb and uniprot is case-insensitive, but ENA is upper-case
+    * normalize accession numbers for cached and online validation
     */
-   public static boolean isOnlineValid(String db, String id, String domain) {
-      id = normalizeID(db, id);
+   public static String normalizeID(String db, String id) {
+      int dotIndex = id.indexOf("."); // if it's a dotted Accession number, then only test the prefix
 
-      if ("doi".equals(db)) { // if id is a doi
-         return isDOIValid(id);
-      } else {
-         return isAccValid(domain, id);
-      }
+      if (dotIndex != -1 && !"doi".equals(db)) { id = id.substring(0, dotIndex); }
+      if (")".equals(id.substring(id.length() - 1))) { id = id.substring(0, id.length() - 1); }
+
+      return id.toUpperCase();
+   }
+
+   /**
+    * return a prefix of a DOI
+    */
+   public static String prefixDOI(String doi) {
+      String prefix = new String();
+      int bsIndex = doi.indexOf("/");
+
+      if (bsIndex != -1) {
+        prefix = doi.substring(0, bsIndex);
+      }           
+      return prefix;
    }
 
 

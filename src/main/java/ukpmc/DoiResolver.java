@@ -6,8 +6,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
-import ukpmc.QueryGenerator;
-// import ukpmc.scala.QueryGenerator;
+// import ukpmc.QueryGenerator;
+import ukpmc.scala.QueryGenerator;
 
 public class DoiResolver implements IDResolver {
    private String host = "data.datacite.org"; // TODO make it more generic for any sites?
