@@ -154,6 +154,9 @@ public class ValidateAccessionNumber implements Service {
          try {
             Map <String, String> map = Xml.splitElement(yytext, start);
             String xmlcontent = map.get(Xml.CONTENT);
+
+	    System.err.println(map.get(Xml.TAGNAME));
+
             DfaRun dfaRunEntity = new DfaRun(dfa_entity);
             String newoutput = dfaRunEntity.filter(xmlcontent);
             String embedcontent = reEmbedContent(newoutput, yytext, map, start);

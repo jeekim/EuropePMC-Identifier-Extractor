@@ -5,8 +5,10 @@
 <SENT sid="2" pm="."><plain>Thereafter 100 ng of digested DNA was used to a PCR amplification of two fragments (F1 and F2) spanning part of the <italic>IRF-4</italic> promoter (<xref ref-type="bibr" rid="b30">30</xref>) (GenBank <ext-link ext-link-type="gen" xlink:href="U52683">U52683.1</ext-link>; see <xref ref-type="fig" rid="fig3">Figure 3A</xref>) </plain></SENT>
 <SENT sid="3" pm="."><plain>SiteFind identified a potential <italic>BglII </italic>sequence overlapping with our desired R390S mutation of the KLF4 wild-type sequence [GenBank: <ext-link ext-link-type="gen" xlink:href="BC010301">BC010301</ext-link>] </plain></SENT>
 <SENT sid="4" pm="."><plain>mim Modified from SwissProt, ID: <ext-link ext-link-type="sprot" xlink:href="P34056">P34056</ext-link> [68] </plain></SENT>
+</text>
 </article>
 <article>
+<text>
 <SENT sid="5" pm="."><plain> omim 603878 </plain></SENT>
 <SENT sid="6" pm="."><plain>3) Sequences specifically obtained for this study have been deposited in [accession: EF151088–EF151123 and EF998999].</plain></SENT>
 <SENT sid="7" pm="."><plain>doi/10.1073/pnas.040460297 10.2210/PDB2OBS/PDB) </plain></SENT>
@@ -21,8 +23,6 @@
 <SENT sid="17" pm="."><plain>ensembl ENSG00000149311</plain></SENT>
 <SENT sid="18" pm="."><plain>pfam PF04083</plain></SENT>
 <SENT sid="19" pm="."><plain>interpro  IPR000100</plain></SENT>
-</text>
-<text>
 <SENT sid="20" pm="."><plain>go GO:0006915</plain></SENT>
 <SENT sid="21" pm="."><plain>EGAD00000000001</plain></SENT>
 <SENT sid="22" pm="."><plain>PXD000500</plain></SENT>
@@ -45,6 +45,5 @@ proteins.The term "anti-Bcl-2 active agent" comprises "anti-Bcl-2 antisense
 nucleotides" and Bcl-2 inhibitors" </plain></SENT>
 <SENT sid="134" pm="."><plain>(Swiss Prot P04062, protein ID AAA35873),</plain></SENT>
 <SENT sid="137" pm="."><plain>agents FR123392</plain></SENT>
-<SENT sid="106429" pm="."><plain>mim <SENT sid="603878" pm="."> </plain></SENT>
 </text>
 </article>
