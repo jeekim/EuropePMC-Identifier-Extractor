@@ -39,7 +39,8 @@ import monq.net.ServiceCreateException;
 import monq.net.ServiceFactory;
 import monq.net.TcpServer;
 
-import ukpmc.scala.Dictionary;
+import ukpmc.scala.MwtParser;
+import ukpmc.scala.MwtAtts;
 
 @SuppressWarnings("serial")
 public class ValidateAccessionNumber implements Service {
@@ -78,7 +79,6 @@ public class ValidateAccessionNumber implements Service {
       URL url = ValidateAccessionNumber.class.getResource("/validate.properties");
       if (url == null) { throw new RuntimeException("can not find validate.properties!"); }
       prop.load(url.openStream());
-      // System.err.println(Dictionary.MAX_SIZE());
    }
 
    /**
@@ -174,51 +174,39 @@ public class ValidateAccessionNumber implements Service {
          LOGGER.setLevel(Level.SEVERE);
          try { 
             Map<String, String> map = Xml.splitElement(yytext, start);
+	    MwtAtts m = new MwtParser(map).parse();
 
-            String xmlcontent = map.get(Xml.CONTENT);
-            String db = map.get("db");
-            String valmethod = map.get("valmethod");
-            String domain = map.get("domain");
-            String context = map.get("context");
-            String wsize = map.get("wsize");
-	    String tagname = prop.getProperty("entity");
-            String tagged = "<" + tagname +" db=\"" + db + "\" ids=\"" + xmlcontent +"\">" + xmlcontent + "</" + tagname + ">";
-            LOGGER.info(db + ": " + ":" + xmlcontent + ":" + valmethod + ": " + domain + ": " + context + ":" + start + ":");
-	    boolean useTagged = false;
-
-            if ("noval".equals(valmethod)) {
+	    boolean useTagged = false; // TODO can I use Option or pattern matching here? get the decision from the case class.
+            if ("noval".equals(m.valmethod())) {
 	       useTagged = true;
-            } else if (valmethod.matches("(.*)contextOnly(.*)")) {
-               if (isAnySameTypeBefore(db) || isInContext(yytext, start, context, wsize)) {
+            } else if ("contextOnly".equals(m.valmethod())) {
+               if (isAnySameTypeBefore(m.db()) || isInContext(yytext, start, m.context(), m.wsize())) {
 	          useTagged = true;
                }
-            } else if (valmethod.matches("(.*)WithContext(.*)")) {
-               if (valmethod.matches("(.*)cached(.*)")) {
-                  if ((isAnySameTypeBefore(db) || isInContext(yytext, start, context, wsize)) && isCachedValid(db, xmlcontent, domain)) {
-	             useTagged = true;
-                  }
-               } else if (valmethod.matches("(.*)online(.*)")) {
-                  if ((isAnySameTypeBefore(db) || isInContext(yytext, start, context, wsize)) && isOnlineValid(db, xmlcontent, domain)) {
-	             useTagged = true;
-                  }
+            } else if ("cachedWithContext".equals(m.valmethod())) {
+               if ((isAnySameTypeBefore(m.db()) || isInContext(yytext, start, m.context(), m.wsize())) && isCachedValid(m.db(), m.xmlcontent(), m.domain())) {
+	          useTagged = true;
+		}
+            } else if ("onlineWithContext".equals(m.valmethod())) {
+               if ((isAnySameTypeBefore(m.db()) || isInContext(yytext, start, m.context(), m.wsize())) && isOnlineValid(m.db(), m.xmlcontent(), m.domain())) {
+	          useTagged = true;
                }
-            } else { // WithoutContext
-               if (valmethod.matches("(.*)cached(.*)")) {
-                  if (isCachedValid(db, xmlcontent, domain)) {
+            } else if ("cached".equals(m.valmethod())) {
+                  if (isCachedValid(m.db(), m.xmlcontent(), m.domain())) {
 	             useTagged = true;
                   }
-               } else if (valmethod.matches("(.*)online(.*)")) {
-                  if (isOnlineValid(db, xmlcontent, domain)) {
+            } else if ("online".equals(m.valmethod())) {
+                  if (isOnlineValid(m.db(), m.xmlcontent(), m.domain())) {
 	             useTagged = true;
                   }
-               }
             }
 
 	    if (useTagged) {
-              numOfAccInBoundary.put(db, 1);
+              String tagged = "<" + m.tagname() +" db=\"" + m.db() + "\" ids=\"" + m.xmlcontent() +"\">" + m.xmlcontent() + "</" + m.tagname() + ">";
+              numOfAccInBoundary.put(m.db(), 1);
               yytext.replace(start, yytext.length(), tagged);
 	    } else {
-              yytext.replace(start, yytext.length(), xmlcontent); // no tagging
+              yytext.replace(start, yytext.length(), m.xmlcontent()); // no tagging
 	    }
 
          } catch (Exception e) {
