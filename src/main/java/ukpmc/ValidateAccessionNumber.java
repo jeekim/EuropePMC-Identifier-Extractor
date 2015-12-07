@@ -154,9 +154,7 @@ public class ValidateAccessionNumber implements Service {
          try {
             Map <String, String> map = Xml.splitElement(yytext, start);
             String xmlcontent = map.get(Xml.CONTENT);
-
 	    System.err.println(map.get(Xml.TAGNAME));
-
             DfaRun dfaRunEntity = new DfaRun(dfa_entity);
             String newoutput = dfaRunEntity.filter(xmlcontent);
             String embedcontent = reEmbedContent(newoutput, yytext, map, start);
@@ -337,7 +335,9 @@ public class ValidateAccessionNumber implements Service {
 
 	 // <z:acc db="%1" valmethod="%2" domain="%3" context="%4" wsize="%5" boundary="???">
          Nfa bnfa = new Nfa(Nfa.NOTHING);
-         bnfa.or(Xml.GoofedElement(prop.getProperty("boundary")), procBoundary);
+         // bnfa.or(Xml.GoofedElement(prop.getProperty("boundary")), procBoundary);
+         bnfa.or(Xml.GoofedElement("table"), procBoundary)
+         .or(Xml.GoofedElement("SENT"), procBoundary);
 	 // .or ... table ... <table> ... <s> </s> <s> </s> ... </table>
          dfa_boundary = bnfa.compile(DfaRun.UNMATCHED_COPY);
 	  

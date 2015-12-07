@@ -43,7 +43,7 @@ Bcl-2 protein(Swiss Prot ID No </plain></SENT>
 <SENT sid="81997" pm="."><plain>P10415), a member of the Bcl-2 family of
 proteins.The term "anti-Bcl-2 active agent" comprises "anti-Bcl-2 antisense
 nucleotides" and Bcl-2 inhibitors" </plain></SENT>
-<SENT sid="134" pm="."><plain>(Swiss Prot P04062, protein ID AAA35873),</plain></SENT>
 <SENT sid="137" pm="."><plain>agents FR123392</plain></SENT>
 </text>
+<table><td><SENT>Swiss Prot</SENT></td><td><SENT>P04062</SENT></td><td><SENT>protein ID AAA35873</SENT></td></table>
 </article>
