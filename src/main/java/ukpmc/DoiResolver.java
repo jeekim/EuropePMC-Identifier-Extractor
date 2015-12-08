@@ -7,6 +7,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 // import ukpmc.QueryGenerator;
+import ukpmc.scala.IDResolver;
 import ukpmc.scala.QueryGenerator;
 
 public class DoiResolver implements IDResolver {

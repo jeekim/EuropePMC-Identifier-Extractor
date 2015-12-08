@@ -8,6 +8,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
+import ukpmc.scala.IDResolver;
+
 public class AccResolver implements IDResolver {
 
    private String host = "www.ebi.ac.uk";

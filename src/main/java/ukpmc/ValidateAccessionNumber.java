@@ -5,7 +5,7 @@ package ukpmc;
  * 
  * Author: Jee-Hyub Kim
  *
- * Looks for tagged elements and attempts to validate the accession number
+ * Looks for tagged elements (e.g., accession numbers, DOIs, funding ids, etc.) and attempts to validate those elements.
  * 
  */
 
@@ -154,7 +154,7 @@ public class ValidateAccessionNumber implements Service {
          try {
             Map <String, String> map = Xml.splitElement(yytext, start);
             String xmlcontent = map.get(Xml.CONTENT);
-	    System.err.println(map.get(Xml.TAGNAME));
+	    // System.err.println(map.get(Xml.TAGNAME));
             DfaRun dfaRunEntity = new DfaRun(dfa_entity);
             String newoutput = dfaRunEntity.filter(xmlcontent);
             String embedcontent = reEmbedContent(newoutput, yytext, map, start);
@@ -172,7 +172,7 @@ public class ValidateAccessionNumber implements Service {
     */   
    private static AbstractFaAction procEntity = new AbstractFaAction() {
       public void invoke(StringBuffer yytext, int start, DfaRun runner) {
-         LOGGER.setLevel(Level.SEVERE);
+         // LOGGER.setLevel(Level.SEVERE);
          try { 
             Map<String, String> map = Xml.splitElement(yytext, start);
 	    MwtAtts m = new MwtParser(map).parse();
@@ -192,14 +192,18 @@ public class ValidateAccessionNumber implements Service {
                if ((isAnySameTypeBefore(m.db()) || isInContext(yytext, start, m.context(), m.wsize())) && isOnlineValid(m.db(), m.xmlcontent(), m.domain())) {
 	          useTagged = true;
                }
+            } else if ("context".equals(m.valmethod())) {
+               if (isInContext(yytext, start, m.context(), m.wsize())) {
+	          useTagged = true;
+               }
             } else if ("cached".equals(m.valmethod())) {
-                  if (isCachedValid(m.db(), m.xmlcontent(), m.domain())) {
-	             useTagged = true;
-                  }
+               if (isCachedValid(m.db(), m.xmlcontent(), m.domain())) {
+	          useTagged = true;
+               }
             } else if ("online".equals(m.valmethod())) {
-                  if (isOnlineValid(m.db(), m.xmlcontent(), m.domain())) {
-	             useTagged = true;
-                  }
+               if (isOnlineValid(m.db(), m.xmlcontent(), m.domain())) {
+	          useTagged = true;
+               }
             }
 
 	    if (useTagged) {
@@ -220,7 +224,8 @@ public class ValidateAccessionNumber implements Service {
     *
     */
    private static boolean isAnySameTypeBefore(String db) { // Can I use this for a range?
-      if ("erc".equals(db)) { return false; }
+      // TODO make it more generic (an option in mwt file)
+      // if ("erc".equals(db)) { return false; }
       return numOfAccInBoundary.containsKey(db);
    }
    
