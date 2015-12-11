@@ -1,12 +1,9 @@
 package ukpmc;
 
 /**
- * Validate Accession Number spotting
- * 
+ * Validate Identifiers
  * Author: Jee-Hyub Kim
- *
  * Looks for tagged elements (e.g., accession numbers, DOIs, funding ids, etc.) and attempts to validate those elements.
- * 
  */
 
 import java.io.BufferedReader;
@@ -45,9 +42,7 @@ import ukpmc.scala.MwtAtts;
 @SuppressWarnings("serial")
 public class ValidateAccessionNumber implements Service {
 
-
    private static final Logger LOGGER = Logger.getLogger(ValidateAccessionNumber.class.getName()); 
-
    private static TcpServer svr = null;
 
    private static Properties prop = new Properties();
@@ -83,7 +78,6 @@ public class ValidateAccessionNumber implements Service {
 
    /**
     * Read the stored list of predefined results and fill a cache
-    * 
     * Note that nothing enforces that the file defines a MAP (there could
     * be more than entry for the same KEY).But this code will just
     * overwrite earlier entries with later ones if this happens.
@@ -145,7 +139,6 @@ public class ValidateAccessionNumber implements Service {
 
    /**
     *
-    *
     */
    private static AbstractFaAction procBoundary = new AbstractFaAction() {
       public void invoke(StringBuffer yytext, int start, DfaRun runner) {
@@ -165,7 +158,6 @@ public class ValidateAccessionNumber implements Service {
       }
    };
 
-
    /**
     *  This processes an accession number
     *  noval: refseq, refsnp, context: eudract offline: pfam, online (+ offline): the rest
@@ -177,41 +169,41 @@ public class ValidateAccessionNumber implements Service {
             Map<String, String> map = Xml.splitElement(yytext, start);
 	    MwtAtts m = new MwtParser(map).parse();
 
-	    boolean useTagged = false; // TODO can I use Option or pattern matching here? get the decision from the case class.
+	    boolean isValid = false; // TODO can I use Option or pattern matching here? get the decision from the case class.
             if ("noval".equals(m.valmethod())) {
-	       useTagged = true;
+	       isValid = true;
             } else if ("contextOnly".equals(m.valmethod())) {
                if (isAnySameTypeBefore(m.db()) || isInContext(yytext, start, m.context(), m.wsize())) {
-	          useTagged = true;
+	          isValid = true;
                }
             } else if ("cachedWithContext".equals(m.valmethod())) {
                if ((isAnySameTypeBefore(m.db()) || isInContext(yytext, start, m.context(), m.wsize())) && isCachedValid(m.db(), m.xmlcontent(), m.domain())) {
-	          useTagged = true;
+	          isValid = true;
 		}
             } else if ("onlineWithContext".equals(m.valmethod())) {
                if ((isAnySameTypeBefore(m.db()) || isInContext(yytext, start, m.context(), m.wsize())) && isOnlineValid(m.db(), m.xmlcontent(), m.domain())) {
-	          useTagged = true;
+	          isValid = true;
                }
             } else if ("context".equals(m.valmethod())) {
                if (isInContext(yytext, start, m.context(), m.wsize())) {
-	          useTagged = true;
+	          isValid = true;
                }
             } else if ("cached".equals(m.valmethod())) {
                if (isCachedValid(m.db(), m.xmlcontent(), m.domain())) {
-	          useTagged = true;
+	          isValid = true;
                }
             } else if ("online".equals(m.valmethod())) {
                if (isOnlineValid(m.db(), m.xmlcontent(), m.domain())) {
-	          useTagged = true;
+	          isValid = true;
                }
             }
 
-	    if (useTagged) {
+	    if (isValid) { // TODO if it's a range, ...  ... ids=\"" + "XXX-YYY" +"\">" ...
               String tagged = "<" + m.tagname() +" db=\"" + m.db() + "\" ids=\"" + m.xmlcontent() +"\">" + m.xmlcontent() + "</" + m.tagname() + ">";
               numOfAccInBoundary.put(m.db(), 1);
               yytext.replace(start, yytext.length(), tagged);
-	    } else {
-              yytext.replace(start, yytext.length(), m.xmlcontent()); // no tagging
+	    } else { // not valid
+              yytext.replace(start, yytext.length(), m.xmlcontent());
 	    }
 
          } catch (Exception e) {
@@ -242,7 +234,6 @@ public class ValidateAccessionNumber implements Service {
    }
 
    /**
-    *
     *
     */
    public static boolean isCachedValid(String db, String accno, String domain) {
@@ -326,9 +317,7 @@ public class ValidateAccessionNumber implements Service {
       return prefix;
    }
 
-
    static {     
-
       try {
          loadConfigurationFile();
          loadDOIPrefix();
@@ -339,19 +328,15 @@ public class ValidateAccessionNumber implements Service {
          dfa_entity = anfa.compile(DfaRun.UNMATCHED_COPY);
 
 	 // <z:acc db="%1" valmethod="%2" domain="%3" context="%4" wsize="%5" boundary="???">
-         Nfa bnfa = new Nfa(Nfa.NOTHING);
-         // bnfa.or(Xml.GoofedElement(prop.getProperty("boundary")), procBoundary);
+         Nfa bnfa = new Nfa(Nfa.NOTHING); // bnfa.or(Xml.GoofedElement(prop.getProperty("boundary")), procBoundary);
          bnfa.or(Xml.GoofedElement("table"), procBoundary)
          .or(Xml.GoofedElement("SENT"), procBoundary);
-	 // .or ... table ... <table> ... <s> </s> <s> </s> ... </table>
          dfa_boundary = bnfa.compile(DfaRun.UNMATCHED_COPY);
 	  
          LOGGER.warning(prop.getProperty("boundary"));
-
       } catch (Exception e) {
          LOGGER.log(Level.INFO, "context", e);
       }
-
    }
 
    public static void main(String[] arg) throws IOException {

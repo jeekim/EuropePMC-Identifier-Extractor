@@ -44,6 +44,7 @@ Bcl-2 protein(Swiss Prot ID No </plain></SENT>
 proteins.The term "anti-Bcl-2 active agent" comprises "anti-Bcl-2 antisense
 nucleotides" and Bcl-2 inhibitors" </plain></SENT>
 <SENT sid="137" pm="."><plain>agents FR123392</plain></SENT>
+<SENT sid="138" pm="."><plain>Escherichia coli (PDB 4U26/4U26) and Thermus thermophilus (PDB 4RB5/4W2F), and </plain></SENT>
 </text>
 <table><td><SENT>Swiss Prot</SENT></td><td><SENT>P04062</SENT></td><td><SENT>protein ID AAA35873</SENT></td></table>
 </article>
