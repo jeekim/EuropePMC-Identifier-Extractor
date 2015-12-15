@@ -50,6 +50,7 @@ public class ValidateAccessionNumber implements Service {
    private static AccResolver ar = new AccResolver();
    
    protected static Dfa dfa_boundary = null;
+   private static Dfa dfa_sent = null;
    private static Dfa dfa_entity = null;
    
    private static Map<String, String> cachedValidations = new HashMap<String, String>();
@@ -142,13 +143,56 @@ public class ValidateAccessionNumber implements Service {
     */
    private static AbstractFaAction procBoundary = new AbstractFaAction() {
       public void invoke(StringBuffer yytext, int start, DfaRun runner) {
-	 // when a boundary in a table, expands the boundary
+         numOfAccInBoundary = new HashMap<String, Integer>();
+         try {
+            Map <String, String> map = Xml.splitElement(yytext, start);
+            String xmlcontent = map.get(Xml.CONTENT);
+	    // System.err.println("TAGNAME: " + map.get(Xml.TAGNAME));
+	    // System.err.println(map.get("type"));
+
+	    if ("TABLE".equals(map.get("type"))) {
+              DfaRun dfaRunEntity = new DfaRun(dfa_entity);
+	      dfaRunEntity.clientData = map.get("type");
+              String newoutput = dfaRunEntity.filter(xmlcontent);
+              String embedcontent = reEmbedContent(newoutput, yytext, map, start);
+              yytext.replace(start, yytext.length(), embedcontent);
+	    } else if ("SENT".equals(map.get(Xml.TAGNAME))) {
+	      // System.err.println("xxxxxxxxxxx");
+              DfaRun dfaRunSent = new DfaRun(dfa_sent);
+	      dfaRunSent.clientData = map.get(Xml.TAGNAME);
+              String newoutput = dfaRunSent.filter(xmlcontent);
+              String embedcontent = reEmbedContent(newoutput, yytext, map, start);
+              yytext.replace(start, yytext.length(), embedcontent);
+	    } else {
+	      // System.err.println("xxxxxxxxxxx");
+              DfaRun dfaRunSent = new DfaRun(dfa_sent);
+	      dfaRunSent.clientData = map.get("type");
+              String newoutput = dfaRunSent.filter(xmlcontent);
+              String embedcontent = reEmbedContent(newoutput, yytext, map, start);
+              yytext.replace(start, yytext.length(), embedcontent);
+	    }
+
+
+         } catch (Exception e) {
+            LOGGER.log(Level.INFO, "context", e);
+         }
+      }
+   };
+
+   /**
+    *
+    */
+   private static AbstractFaAction procSent = new AbstractFaAction() {
+      public void invoke(StringBuffer yytext, int start, DfaRun runner) {
          numOfAccInBoundary = new HashMap<String, Integer>();
          try {
             Map <String, String> map = Xml.splitElement(yytext, start);
             String xmlcontent = map.get(Xml.CONTENT);
 	    // System.err.println(map.get(Xml.TAGNAME));
+	    // System.err.println(map.get("type"));
             DfaRun dfaRunEntity = new DfaRun(dfa_entity);
+	    dfaRunEntity.clientData = runner.clientData;
+	    // System.err.println(runner.clientData + "runner data in procSent");
             String newoutput = dfaRunEntity.filter(xmlcontent);
             String embedcontent = reEmbedContent(newoutput, yytext, map, start);
             yytext.replace(start, yytext.length(), embedcontent);
@@ -158,16 +202,22 @@ public class ValidateAccessionNumber implements Service {
       }
    };
 
+
    /**
     *  This processes an accession number
     *  noval: refseq, refsnp, context: eudract offline: pfam, online (+ offline): the rest
     */   
    private static AbstractFaAction procEntity = new AbstractFaAction() {
+      // TODO can I take this off, into another class?
       public void invoke(StringBuffer yytext, int start, DfaRun runner) {
          // LOGGER.setLevel(Level.SEVERE);
          try { 
             Map<String, String> map = Xml.splitElement(yytext, start);
 	    MwtAtts m = new MwtParser(map).parse();
+	    // System.err.println(runner.clientData + " runner data in procEntity");
+	    String where = runner.clientData.toString();
+	    // System.err.println(where + " where in procEntity");
+	    // System.err.println(m.sec() + " m.sec in procEntity");
 
 	    boolean isValid = false; // TODO can I use Option or pattern matching here? get the decision from the case class.
             if ("noval".equals(m.valmethod())) {
@@ -198,7 +248,8 @@ public class ValidateAccessionNumber implements Service {
                }
             }
 
-	    if (isValid) { // TODO if it's a range, ...  ... ids=\"" + "XXX-YYY" +"\">" ...
+	    if (isValid && isNotInThisSection(where, m.sec())) { // TODO if it's a range, ...  ... ids=\"" + "XXX-YYY" +"\">" ...
+	    // if (isValid) { // TODO if it's a range, ...  ... ids=\"" + "XXX-YYY" +"\">" ...
               String tagged = "<" + m.tagname() +" db=\"" + m.db() + "\" ids=\"" + m.xmlcontent() +"\">" + m.xmlcontent() + "</" + m.tagname() + ">";
               numOfAccInBoundary.put(m.db(), 1);
               yytext.replace(start, yytext.length(), tagged);
@@ -231,6 +282,21 @@ public class ValidateAccessionNumber implements Service {
       Pattern p = Pattern.compile(context);
       Matcher m = p.matcher(yytext.substring(pStart, start));
       return m.find();
+   }
+
+   /**
+    *
+    */
+   private static boolean isNotInThisSection(String section, String dSection) {
+      /*/ if (section.equals(null)) {
+        return true;
+      } else if (dSection.equals(null)) {
+        return true;
+      } else */ if (section.equals(dSection)) {
+        return false;
+      } else {
+        return true;
+      }
    }
 
    /**
@@ -327,11 +393,16 @@ public class ValidateAccessionNumber implements Service {
          anfa.or(Xml.GoofedElement(prop.getProperty("entity")), procEntity);
          dfa_entity = anfa.compile(DfaRun.UNMATCHED_COPY);
 
-	 // <z:acc db="%1" valmethod="%2" domain="%3" context="%4" wsize="%5" boundary="???">
-         Nfa bnfa = new Nfa(Nfa.NOTHING); // bnfa.or(Xml.GoofedElement(prop.getProperty("boundary")), procBoundary);
-         bnfa.or(Xml.GoofedElement("table"), procBoundary)
+         Nfa bnfa = new Nfa(Nfa.NOTHING);
+         // bnfa.or(Xml.GoofedElement("table"), procBoundary)
+         bnfa.or(Xml.GoofedElement("SecTag"), procBoundary)
+         // .or(Xml.GoofedElement("SENT"), procBoundary);
          .or(Xml.GoofedElement("SENT"), procBoundary);
          dfa_boundary = bnfa.compile(DfaRun.UNMATCHED_COPY);
+
+         Nfa snfa = new Nfa(Nfa.NOTHING);
+         snfa.or(Xml.GoofedElement("plain"), procSent);
+         dfa_sent = snfa.compile(DfaRun.UNMATCHED_COPY);
 	  
          LOGGER.warning(prop.getProperty("boundary"));
       } catch (Exception e) {

@@ -3,7 +3,7 @@ package ukpmc.scala
 import monq.jfa.Xml
 import java.util.Map
 
-case class MwtAtts(tagname: String, xmlcontent: String, db: String, valmethod: String, domain: String, context: String, wsize: String)
+case class MwtAtts(tagname: String, xmlcontent: String, db: String, valmethod: String, domain: String, context: String, wsize: String, sec: String)
 
 class MwtParser(val map: java.util.Map[String, String]) {
 
@@ -17,7 +17,8 @@ class MwtParser(val map: java.util.Map[String, String]) {
     val domain = map.get("domain");
     val context = map.get("context");
     val wsize = map.get("wsize");
+    val sec = map.get("sec");
 
-    MwtAtts(tagname, xmlcontent, db, valmethod, domain, context, wsize)
+    MwtAtts(tagname, xmlcontent, db, valmethod, domain, context, wsize, sec)
   }
 }
