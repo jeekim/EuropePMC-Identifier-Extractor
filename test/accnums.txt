@@ -47,4 +47,5 @@ nucleotides" and Bcl-2 inhibitors" </plain></SENT>
 <SENT sid="138" pm="."><plain>Escherichia coli (PDB 4U26/4U26) and Thermus thermophilus (PDB 4RB5/4W2F), and </plain></SENT>
 </text>
 <SecTag type="TABLE"><table><td><SENT><plain>Swiss Prot</plain></SENT></td><td><SENT><plain>P04062</plain></SENT></td><td><SENT><plain>protein ID AAA35873</plain></SENT></td></table></SecTag>
+<SecTag type="ACK"><table><td><SENT><plain>Swiss Prot</plain></SENT></td><td><SENT><plain>P04062</plain></SENT></td><td><SENT><plain>protein ID AAA35873</plain></SENT></td></table></SecTag>
 </article>
