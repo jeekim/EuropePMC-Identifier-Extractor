@@ -50,7 +50,7 @@ public class ValidateAccessionNumber implements Service {
    private static AccResolver ar = new AccResolver();
    
    protected static Dfa dfa_boundary = null;
-   private static Dfa dfa_sent = null;
+   private static Dfa dfa_plain = null;
    private static Dfa dfa_entity = null;
    
    private static Map<String, String> cachedValidations = new HashMap<String, String>();
@@ -146,31 +146,24 @@ public class ValidateAccessionNumber implements Service {
          numOfAccInBoundary = new HashMap<String, Integer>();
          try {
             Map <String, String> map = Xml.splitElement(yytext, start);
-            String xmlcontent = map.get(Xml.CONTENT);
-	    // System.err.println("TAGNAME: " + map.get(Xml.TAGNAME));
-	    // System.err.println(map.get("type"));
+            String content = map.get(Xml.CONTENT);
+	    String newoutput = "";
 
-	    if ("TABLE".equals(map.get("type"))) {
-              DfaRun dfaRunEntity = new DfaRun(dfa_entity);
+	    if ("SENT".equals(map.get(Xml.TAGNAME))) {
+              DfaRun dfaRunPlain = new DfaRun(dfa_plain); // to <plain>
+	      dfaRunPlain.clientData = map.get(Xml.TAGNAME);
+              newoutput = dfaRunPlain.filter(content);
+	    } else if ("TABLE".equals(map.get("type"))) { // SecTag type="TABLE"
+              DfaRun dfaRunEntity = new DfaRun(dfa_entity); // to <z:acc>
 	      dfaRunEntity.clientData = map.get("type");
-              String newoutput = dfaRunEntity.filter(xmlcontent);
-              String embedcontent = reEmbedContent(newoutput, yytext, map, start);
-              yytext.replace(start, yytext.length(), embedcontent);
-	    } else if ("SENT".equals(map.get(Xml.TAGNAME))) {
-	      // System.err.println("xxxxxxxxxxx");
-              DfaRun dfaRunSent = new DfaRun(dfa_sent);
-	      dfaRunSent.clientData = map.get(Xml.TAGNAME);
-              String newoutput = dfaRunSent.filter(xmlcontent);
-              String embedcontent = reEmbedContent(newoutput, yytext, map, start);
-              yytext.replace(start, yytext.length(), embedcontent);
-	    } else {
-	      // System.err.println("xxxxxxxxxxx");
-              DfaRun dfaRunSent = new DfaRun(dfa_sent);
-	      dfaRunSent.clientData = map.get("type");
-              String newoutput = dfaRunSent.filter(xmlcontent);
-              String embedcontent = reEmbedContent(newoutput, yytext, map, start);
-              yytext.replace(start, yytext.length(), embedcontent);
+              newoutput = dfaRunEntity.filter(content);
+	    } else { // SecTag
+              DfaRun dfaRunPlain = new DfaRun(dfa_plain); // to <plain>
+	      dfaRunPlain.clientData = map.get("type");
+              newoutput = dfaRunPlain.filter(content);
 	    }
+            String embedcontent = reEmbedContent(newoutput, yytext, map, start);
+            yytext.replace(start, yytext.length(), embedcontent);
 
 
          } catch (Exception e) {
@@ -182,18 +175,17 @@ public class ValidateAccessionNumber implements Service {
    /**
     *
     */
-   private static AbstractFaAction procSent = new AbstractFaAction() {
+   private static AbstractFaAction procPlain = new AbstractFaAction() { // TODO: rename to procPlain
       public void invoke(StringBuffer yytext, int start, DfaRun runner) {
          numOfAccInBoundary = new HashMap<String, Integer>();
          try {
             Map <String, String> map = Xml.splitElement(yytext, start);
-            String xmlcontent = map.get(Xml.CONTENT);
-	    // System.err.println(map.get(Xml.TAGNAME));
-	    // System.err.println(map.get("type"));
+            String content = map.get(Xml.CONTENT);
+
             DfaRun dfaRunEntity = new DfaRun(dfa_entity);
-	    dfaRunEntity.clientData = runner.clientData;
-	    // System.err.println(runner.clientData + "runner data in procSent");
-            String newoutput = dfaRunEntity.filter(xmlcontent);
+	    dfaRunEntity.clientData = runner.clientData; // SENT or SecTag type=xxx
+
+            String newoutput = dfaRunEntity.filter(content);
             String embedcontent = reEmbedContent(newoutput, yytext, map, start);
             yytext.replace(start, yytext.length(), embedcontent);
          } catch (Exception e) {
@@ -214,24 +206,21 @@ public class ValidateAccessionNumber implements Service {
          try { 
             Map<String, String> map = Xml.splitElement(yytext, start);
 	    MwtAtts m = new MwtParser(map).parse();
-	    // System.err.println(runner.clientData + " runner data in procEntity");
-	    String where = runner.clientData.toString();
-	    // System.err.println(where + " where in procEntity");
-	    // System.err.println(m.sec() + " m.sec in procEntity");
+	    String secOrSent = runner.clientData.toString();
 
 	    boolean isValid = false; // TODO can I use Option or pattern matching here? get the decision from the case class.
-            if ("noval".equals(m.valmethod())) {
+	    if ("noval".equals(m.valmethod())) {
 	       isValid = true;
             } else if ("contextOnly".equals(m.valmethod())) {
                if (isAnySameTypeBefore(m.db()) || isInContext(yytext, start, m.context(), m.wsize())) {
 	          isValid = true;
                }
             } else if ("cachedWithContext".equals(m.valmethod())) {
-               if ((isAnySameTypeBefore(m.db()) || isInContext(yytext, start, m.context(), m.wsize())) && isCachedValid(m.db(), m.xmlcontent(), m.domain())) {
+               if ((isAnySameTypeBefore(m.db()) || isInContext(yytext, start, m.context(), m.wsize())) && isCachedValid(m.db(), m.content(), m.domain())) {
 	          isValid = true;
 		}
             } else if ("onlineWithContext".equals(m.valmethod())) {
-               if ((isAnySameTypeBefore(m.db()) || isInContext(yytext, start, m.context(), m.wsize())) && isOnlineValid(m.db(), m.xmlcontent(), m.domain())) {
+               if ((isAnySameTypeBefore(m.db()) || isInContext(yytext, start, m.context(), m.wsize())) && isOnlineValid(m.db(), m.content(), m.domain())) {
 	          isValid = true;
                }
             } else if ("context".equals(m.valmethod())) {
@@ -239,22 +228,21 @@ public class ValidateAccessionNumber implements Service {
 	          isValid = true;
                }
             } else if ("cached".equals(m.valmethod())) {
-               if (isCachedValid(m.db(), m.xmlcontent(), m.domain())) {
+               if (isCachedValid(m.db(), m.content(), m.domain())) {
 	          isValid = true;
                }
             } else if ("online".equals(m.valmethod())) {
-               if (isOnlineValid(m.db(), m.xmlcontent(), m.domain())) {
+               if (isOnlineValid(m.db(), m.content(), m.domain())) {
 	          isValid = true;
                }
             }
 
-	    if (isValid && isNotInThisSection(where, m.sec())) { // TODO if it's a range, ...  ... ids=\"" + "XXX-YYY" +"\">" ...
-	    // if (isValid) { // TODO if it's a range, ...  ... ids=\"" + "XXX-YYY" +"\">" ...
-              String tagged = "<" + m.tagname() +" db=\"" + m.db() + "\" ids=\"" + m.xmlcontent() +"\">" + m.xmlcontent() + "</" + m.tagname() + ">";
+	    if (isValid && isInValidSection(secOrSent, m.sec())) { // TODO range,  ids=\"" + "XXX-YYY" +"\">"
+              String tagged = "<" + m.tagname() +" db=\"" + m.db() + "\" ids=\"" + m.content() +"\">"+ m.content() + "</" + m.tagname() + ">";
               numOfAccInBoundary.put(m.db(), 1);
               yytext.replace(start, yytext.length(), tagged);
 	    } else { // not valid
-              yytext.replace(start, yytext.length(), m.xmlcontent());
+              yytext.replace(start, yytext.length(), m.content());
 	    }
 
          } catch (Exception e) {
@@ -267,8 +255,6 @@ public class ValidateAccessionNumber implements Service {
     *
     */
    private static boolean isAnySameTypeBefore(String db) { // Can I use this for a range?
-      // TODO make it more generic (an option in mwt file)
-      // if ("erc".equals(db)) { return false; }
       return numOfAccInBoundary.containsKey(db);
    }
    
@@ -287,12 +273,8 @@ public class ValidateAccessionNumber implements Service {
    /**
     *
     */
-   private static boolean isNotInThisSection(String section, String dSection) {
-      /*/ if (section.equals(null)) {
-        return true;
-      } else if (dSection.equals(null)) {
-        return true;
-      } else */ if (section.equals(dSection)) {
+   private static boolean isInValidSection(String secOrSent, String sec) { // <z:acc ... sec="%6">
+      if (secOrSent.equals(sec)) {
         return false;
       } else {
         return true;
@@ -396,13 +378,12 @@ public class ValidateAccessionNumber implements Service {
          Nfa bnfa = new Nfa(Nfa.NOTHING);
          // bnfa.or(Xml.GoofedElement("table"), procBoundary)
          bnfa.or(Xml.GoofedElement("SecTag"), procBoundary)
-         // .or(Xml.GoofedElement("SENT"), procBoundary);
          .or(Xml.GoofedElement("SENT"), procBoundary);
          dfa_boundary = bnfa.compile(DfaRun.UNMATCHED_COPY);
 
          Nfa snfa = new Nfa(Nfa.NOTHING);
-         snfa.or(Xml.GoofedElement("plain"), procSent);
-         dfa_sent = snfa.compile(DfaRun.UNMATCHED_COPY);
+         snfa.or(Xml.GoofedElement("plain"), procPlain);
+         dfa_plain = snfa.compile(DfaRun.UNMATCHED_COPY);
 	  
          LOGGER.warning(prop.getProperty("boundary"));
       } catch (Exception e) {
