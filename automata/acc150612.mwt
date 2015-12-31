@@ -23,6 +23,7 @@
   <r p1="ensembl" p2="contextOnly" p3="ensemblRoot" p4="(?i)(ensembl)" p5="20000">[eE][nN][sS][a-zA-Z]*[ptPT][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]+</r>
 
   <!-- omim -->
+  <!-- onlineWithBoundary -->
   <r p1="omim" p2="onlineWithContext" p3="omim" p4="(?i)(o*mim)" p5="20000" p6="ACK">[0-9][0-9][0-9][0-9][0-9][0-9]</r>
 
   <!-- pfam -->
