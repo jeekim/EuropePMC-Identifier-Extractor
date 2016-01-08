@@ -50,7 +50,7 @@ The pipeline takes sentences as input. Those sentences have to be formatted as f
 
 ```
 cat test/ercfunds.txt | \
-java -cp lib/monq.jar monq.programs.DictFilter -t elem -e plain -ie UTF-8 -oe UTF-8 automata/grants150714.mwt | \
+java -cp lib/monq-1.7.1.jar monq.programs.DictFilter -t elem -e plain -ie UTF-8 -oe UTF-8 automata/grants150714.mwt | \
 java -cp target/scala-2.10/europepmc-identifier-extractor-assembly-0.1-SNAPSHOT.jar ukpmc.ValidateAccessionNumber -stdpipe
 ```
 
@@ -58,16 +58,16 @@ java -cp target/scala-2.10/europepmc-identifier-extractor-assembly-0.1-SNAPSHOT.
 
 ```
 cat test/accnums.txt | \
-java -cp lib/monq.jar monq.programs.DictFilter -t elem -e plain -ie UTF-8 -oe UTF-8 automata/acc150612.mwt | \
+java -cp lib/monq-1.7.1.jar monq.programs.DictFilter -t elem -e plain -ie UTF-8 -oe UTF-8 automata/acc150612.mwt | \
 java -cp target/scala-2.10/europepmc-identifier-extractor-assembly-0.1-SNAPSHOT.jar ukpmc.ValidateAccessionNumber -stdpipe
 ```
 
 ##### Running as server
 
 ```
-java -cp lib/monq.jar monq.programs.DictFilter -t elem -e plain -ie UTF-8 -oe UTF-8 automata/acc150612.mwt -p 3333 &
+java -cp lib/monq-1.7.1.jar monq.programs.DictFilter -t elem -e plain -ie UTF-8 -oe UTF-8 automata/acc150612.mwt -p 3333 &
 java -cp target/scala-2.10/europepmc-identifier-extractor-assembly-0.1-SNAPSHOT.jar ukpmc.ValidateAccessionNumber &
-echo "<SENT><plain>pdb 1aj9</plain></SENT>" | java -cp lib/monq.jar:lib/xstream-1.4.8.jar monq.programs.DistFilter -c . 'host=localhost;port=3333' 'host=localhost;port=7811'
+echo "<SENT><plain>pdb 1aj9</plain></SENT>" | java -cp lib/monq-1.7.1.jar monq.programs.DistFilter -c . 'host=localhost;port=3333' 'host=localhost;port=7811'
 ```
 
 ##### Running as container (e.g., Docker)

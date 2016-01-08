@@ -29,6 +29,7 @@ import monq.jfa.Dfa;
 import monq.jfa.DfaRun;
 import monq.jfa.Nfa;
 import monq.jfa.Xml;
+import monq.jfa.ReaderCharSource;
 
 import monq.net.FilterServiceFactory;
 import monq.net.Service;
@@ -128,7 +129,8 @@ public class ValidateAccessionNumber implements Service {
    /**
     *
     */
-   private static String reEmbedContent(String taggedF, StringBuffer yytext, Map<String, String> map, int start) {
+   private static String reEmbedContent(String taggedF, StringBuilder yytext, Map<String, String> map, int start) {
+   // private static String reEmbedContent(String taggedF, StringBuffer yytext, Map<String, String> map, int start) {
       int contentBegins = yytext.indexOf(map.get(Xml.CONTENT), start);
       int contentLength = map.get(Xml.CONTENT).length();
       StringBuilder newelem = new StringBuilder();
@@ -142,7 +144,7 @@ public class ValidateAccessionNumber implements Service {
     *
     */
    private static AbstractFaAction procBoundary = new AbstractFaAction() {
-      public void invoke(StringBuffer yytext, int start, DfaRun runner) {
+      public void invoke(StringBuilder yytext, int start, DfaRun runner) {
          numOfAccInBoundary = new HashMap<String, Integer>();
          try {
             Map <String, String> map = Xml.splitElement(yytext, start);
@@ -176,7 +178,8 @@ public class ValidateAccessionNumber implements Service {
     *
     */
    private static AbstractFaAction procPlain = new AbstractFaAction() { // TODO: rename to procPlain
-      public void invoke(StringBuffer yytext, int start, DfaRun runner) {
+      public void invoke(StringBuilder yytext, int start, DfaRun runner) {
+      // public void invoke(StringBuffer yytext, int start, DfaRun runner) {
          numOfAccInBoundary = new HashMap<String, Integer>();
          try {
             Map <String, String> map = Xml.splitElement(yytext, start);
@@ -201,7 +204,8 @@ public class ValidateAccessionNumber implements Service {
     */   
    private static AbstractFaAction procEntity = new AbstractFaAction() {
       // TODO can I take this off, into another class?
-      public void invoke(StringBuffer yytext, int start, DfaRun runner) {
+      public void invoke(StringBuilder yytext, int start, DfaRun runner) {
+      // public void invoke(StringBuffer yytext, int start, DfaRun runner) {
          // LOGGER.setLevel(Level.SEVERE);
          try { 
             Map<String, String> map = Xml.splitElement(yytext, start);
@@ -261,7 +265,8 @@ public class ValidateAccessionNumber implements Service {
    /**
     *
     */
-   private static boolean isInContext(StringBuffer yytext, int start, String context, String wsize) {
+   private static boolean isInContext(StringBuilder yytext, int start, String context, String wsize) {
+   // private static boolean isInContext(StringBuffer yytext, int start, String context, String wsize) {
       Integer wSize = Integer.parseInt(wsize);
       Integer pStart = start - wSize;
       if (pStart < 0) { pStart = 0; }
@@ -440,7 +445,7 @@ public class ValidateAccessionNumber implements Service {
    @SuppressWarnings("deprecation")
    public void run() {
       DfaRun dfaRun = new DfaRun(dfa_boundary);
-      dfaRun.setIn(in);
+      dfaRun.setIn(new ReaderCharSource(in));
       PrintStream outpw = new PrintStream(out);
 
       try {
