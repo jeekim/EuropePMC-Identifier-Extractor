@@ -1,4 +1,4 @@
-# Identifier Extractor
+# (Any) Identifiers Extractor
 
 [![Build Status](https://travis-ci.org/jeekim/EuropePMC-Identifier-Extractor.svg)](https://travis-ci.org/jeekim/EuropePMC-Identifier-Extractor)
 
@@ -73,6 +73,17 @@ echo "<SENT><plain>pdb 1aj9</plain></SENT>" | java -cp lib/monq.jar:lib/xstream-
 ##### Running as container (e.g., Docker)
 
 TODO
+
+##### Running on AWS
+
+TODO
+
+```
+git clone src/test/scala/DoiResolver_test.scala
+cd ...
+sbt assembly
+...
+```
 
 ### Acknowledgements
 
