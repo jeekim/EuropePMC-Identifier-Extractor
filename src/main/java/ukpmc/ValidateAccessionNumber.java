@@ -371,10 +371,6 @@ public class ValidateAccessionNumber implements Service {
          loadDOIPrefix();
          loadPredefinedResults();
 
-         Nfa anfa = new Nfa(Nfa.NOTHING);
-         anfa.or(Xml.GoofedElement(prop.getProperty("entity")), procEntity);
-         dfa_entity = anfa.compile(DfaRun.UNMATCHED_COPY);
-
          Nfa bnfa = new Nfa(Nfa.NOTHING);
          // bnfa.or(Xml.GoofedElement("table"), procBoundary)
          bnfa.or(Xml.GoofedElement("SecTag"), procBoundary)
@@ -385,6 +381,10 @@ public class ValidateAccessionNumber implements Service {
          snfa.or(Xml.GoofedElement("plain"), procPlain);
          dfa_plain = snfa.compile(DfaRun.UNMATCHED_COPY);
 	  
+         Nfa anfa = new Nfa(Nfa.NOTHING);
+         anfa.or(Xml.GoofedElement(prop.getProperty("entity")), procEntity); // z:acc
+         dfa_entity = anfa.compile(DfaRun.UNMATCHED_COPY);
+
          LOGGER.warning(prop.getProperty("boundary"));
       } catch (Exception e) {
          LOGGER.log(Level.INFO, "context", e);

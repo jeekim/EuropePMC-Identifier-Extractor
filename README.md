@@ -14,6 +14,10 @@ A text-mining pipeline to extract identifiers such as European Research Council 
 sbt assembly
 ```
 
+### How to build a container?
+
+TODO
+
 ### How to use?
 
 You need to create a dictionary based on mwt format and format your input documents in xml.
@@ -57,6 +61,18 @@ cat test/accnums.txt | \
 java -cp lib/monq.jar monq.programs.DictFilter -t elem -e plain -ie UTF-8 -oe UTF-8 automata/acc150612.mwt | \
 java -cp target/scala-2.10/europepmc-identifier-extractor-assembly-0.1-SNAPSHOT.jar ukpmc.ValidateAccessionNumber -stdpipe
 ```
+
+##### Running as server
+
+```
+java -cp lib/monq.jar monq.programs.DictFilter -t elem -e plain -ie UTF-8 -oe UTF-8 automata/acc150612.mwt -p 3333 &
+java -cp target/scala-2.10/europepmc-identifier-extractor-assembly-0.1-SNAPSHOT.jar ukpmc.ValidateAccessionNumber &
+echo "<SENT><plain>pdb 1aj9</plain></SENT>" | java -cp lib/monq.jar:lib/xstream-1.4.8.jar monq.programs.DistFilter -c . 'host=localhost;port=3333' 'host=localhost;port=7811'
+```
+
+##### Running as container (e.g., Docker)
+
+TODO
 
 ### Acknowledgements
 

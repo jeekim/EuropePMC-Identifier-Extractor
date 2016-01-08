@@ -7,7 +7,7 @@ case class MwtAtts(tagname: String, content: String, db: String, valmethod: Stri
 
 class MwtParser(val map: java.util.Map[String, String]) {
 
-  // <template><z:acc db="%1" valmethod="%2" domain="%3" context="%4" wsize="%5">%0</z:acc></template>
+  // <template><z:acc db="%1" valmethod="%2" domain="%3" context="%4" wsize="%5" sec="%6">%0</z:acc></template>
   def parse = {
     val tagname = map.get(Xml.TAGNAME);
     val content = map.get(Xml.CONTENT);
