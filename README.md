@@ -79,7 +79,7 @@ TODO
 TODO
 
 ```
-git clone src/test/scala/DoiResolver_test.scala
+git clone https://github.com/jeekim/EuropePMC-Identifier-Extractor.git --branch test
 cd ...
 sbt assembly
 ...
