@@ -24,3 +24,21 @@ libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.12.5" % "test"
 scalacOptions in (Compile,doc) := Seq("-groups", "-implicits")
 
 scalacOptions in Test ++= Seq("-Yrangepos")
+
+lazy val hello = taskKey[Unit]("Prints 'Hello World'")
+
+hello := {
+  "ls" !
+}
+
+// hello := println("hello world!")
+
+val deployTask = TaskKey[Unit]("deploy", "Copies assembly jar to remote location")
+
+deployTask <<= assembly map { (asm) =>
+  val account = "jhkim@ebi-001.ebi.ac.uk" // FIXME!
+  val local = asm.getPath
+  val remote = account + ":" + "/nfs/misc/literature/textmining/ePMC/lib/" + asm.getName
+  println(s"Copying: $local -> $account:$remote")
+  Seq("scp", local, remote) !!
+}

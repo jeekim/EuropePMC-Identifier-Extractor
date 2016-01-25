@@ -243,6 +243,7 @@ public class ValidateAccessionNumber implements Service {
 
 	    if (isValid && isInValidSection(secOrSent, m.sec())) { // TODO range,  ids=\"" + "XXX-YYY" +"\">"
               String tagged = "<" + m.tagname() +" db=\"" + m.db() + "\" ids=\"" + m.content() +"\">"+ m.content() + "</" + m.tagname() + ">";
+	      // if isSameTypeBefore, isRange? relation extraction problem.
               numOfAccInBoundary.put(m.db(), 1);
               yytext.replace(start, yytext.length(), tagged);
 	    } else { // not valid
