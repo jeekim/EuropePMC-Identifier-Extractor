@@ -36,7 +36,7 @@ hello := {
 val deployTask = TaskKey[Unit]("deploy", "Copies assembly jar to remote location")
 
 deployTask <<= assembly map { (asm) =>
-  val account = "jhkim@ebi-001.ebi.ac.uk" // FIXME!
+  val account = "jhkim@ebi-001.ebi.ac.uk"
   val local = asm.getPath
   val remote = account + ":" + "/nfs/misc/literature/textmining/ePMC/lib/" + asm.getName
   println(s"Copying: $local -> $account:$remote")

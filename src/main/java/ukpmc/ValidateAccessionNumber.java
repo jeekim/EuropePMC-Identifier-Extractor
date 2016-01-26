@@ -203,6 +203,7 @@ public class ValidateAccessionNumber implements Service {
     *  noval: refseq, refsnp, context: eudract offline: pfam, online (+ offline): the rest
     */   
    private static AbstractFaAction procEntity = new AbstractFaAction() {
+      // TODO should be decoupled!!! E.g., can be used for species tagger.
       // TODO can I take this off, into another class?
       public void invoke(StringBuilder yytext, int start, DfaRun runner) {
       // public void invoke(StringBuffer yytext, int start, DfaRun runner) {
@@ -262,6 +263,10 @@ public class ValidateAccessionNumber implements Service {
    private static boolean isAnySameTypeBefore(String db) { // Can I use this for a range?
       return numOfAccInBoundary.containsKey(db);
    }
+
+   private static boolean notIsInContext(StringBuilder yytext, int start, String context, String wsize) {
+      return false;
+   }
    
    /**
     *
@@ -279,8 +284,9 @@ public class ValidateAccessionNumber implements Service {
    /**
     *
     */
-   private static boolean isInValidSection(String secOrSent, String sec) { // <z:acc ... sec="%6">
-      if (secOrSent.equals(sec)) {
+   public static boolean isInValidSection(String secOrSent, String sec) { // <z:acc ... sec="%6">
+      if (secOrSent.contains(sec)) { // contain?
+      // if (secOrSent.equals(sec)) { // contain?
         return false;
       } else {
         return true;

@@ -60,6 +60,11 @@ java -cp target/scala-2.10/europepmc-identifier-extractor-assembly-0.1-SNAPSHOT.
 cat test/accnums.txt | \
 java -cp lib/monq-1.7.1.jar monq.programs.DictFilter -t elem -e plain -ie UTF-8 -oe UTF-8 automata/acc150612.mwt | \
 java -cp target/scala-2.10/europepmc-identifier-extractor-assembly-0.1-SNAPSHOT.jar ukpmc.ValidateAccessionNumber -stdpipe
+
+or
+
+sbt
+> runExample
 ```
 
 ##### Running as server
