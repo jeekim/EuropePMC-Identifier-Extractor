@@ -285,7 +285,9 @@ public class ValidateAccessionNumber implements Service {
     *
     */
    public static boolean isInValidSection(String secOrSent, String sec) { // <z:acc ... sec="%6">
-      if (secOrSent.contains(sec)) { // contain?
+      if (sec.equals("")) {
+	return true;
+      } else if (secOrSent.contains(sec)) { // contain?
       // if (secOrSent.equals(sec)) { // contain?
         return false;
       } else {

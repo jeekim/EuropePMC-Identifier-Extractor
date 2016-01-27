@@ -49,6 +49,10 @@ The pipeline takes sentences as input. Those sentences have to be formatted as f
 ##### European Research Council funding id extraction
 
 ```
+sbt testERC
+
+or
+
 cat test/ercfunds.txt | \
 java -cp lib/monq-1.7.1.jar monq.programs.DictFilter -t elem -e plain -ie UTF-8 -oe UTF-8 automata/grants150714.mwt | \
 java -cp target/scala-2.10/europepmc-identifier-extractor-assembly-0.1-SNAPSHOT.jar ukpmc.ValidateAccessionNumber -stdpipe
@@ -57,6 +61,10 @@ java -cp target/scala-2.10/europepmc-identifier-extractor-assembly-0.1-SNAPSHOT.
 ##### Accession number mining
 
 ```
+sbt testAcc
+
+or
+
 cat test/accnums.txt | \
 java -cp lib/monq-1.7.1.jar monq.programs.DictFilter -t elem -e plain -ie UTF-8 -oe UTF-8 automata/acc150612.mwt | \
 java -cp target/scala-2.10/europepmc-identifier-extractor-assembly-0.1-SNAPSHOT.jar ukpmc.ValidateAccessionNumber -stdpipe
@@ -89,6 +97,10 @@ cd ...
 sbt assembly
 ...
 ```
+
+### TODO
+
+- to implement ! for negation.
 
 ### Acknowledgements
 
