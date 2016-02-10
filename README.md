@@ -32,6 +32,11 @@ You need to create a dictionary based on mwt format and format your input docume
 </mwt>
 ```
 
+#### How to build a dictionary?
+
+- from tsv
+- from identifiers.org
+
 #### Input document format
 
 The pipeline takes sentences as input. Those sentences have to be formatted as follows>
