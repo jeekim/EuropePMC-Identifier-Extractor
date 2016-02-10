@@ -1,11 +1,12 @@
-# (Any) Identifiers Extractor
+# Agile Context-Dependent Dictionary-Based Text-Mining Pipeline
 
 [![Build Status](https://travis-ci.org/jeekim/EuropePMC-Identifier-Extractor.svg)](https://travis-ci.org/jeekim/EuropePMC-Identifier-Extractor)
 
 A text-mining pipeline to extract identifiers such as European Research Council grant ids in free text. The pipeline mainly consists of two java programs.
 
- 1. Dictionary-based tagger. Given a dictionary, the tagger identifies terms in the dictionary using a Java Finite Automata library. 
- 2. Validator. For each identified term, the validator removes an errorneous term using several mechanisms (contextual information, online validation, etc.).
+ 1. Dictionary builder. Given a tsv file, build an MWT-based dictionary.
+ 2. Dictionary-based tagger. Given a dictionary, the tagger identifies terms in the dictionary using a Java Finite Automata library. 
+ 3. Validator. For each identified term, the validator removes an errorneous term using several mechanisms (contextual information, online validation, etc.).
 
 ### How to build?
 

@@ -25,6 +25,7 @@ public class AccResolver implements IDResolver {
       }
    }
 
+   /* side effect? */
    public boolean isValidID(String domain, String accno) {
      String query = "ebisearch/ws/rest/" + domain + "?query=" + "acc:\"" + accno + "\"%20OR%20id:\"" + accno + "\"";
      try {
