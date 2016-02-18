@@ -107,6 +107,7 @@ sbt assembly
 ### TODO
 
 - to implement ! for negation.
+- sbt plugin for plug and play?
 
 ### Acknowledgements
 
