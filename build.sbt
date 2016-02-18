@@ -27,11 +27,17 @@ testAcc := {
   "cat test/accnums.txt" #| "java -cp lib/monq-1.7.1.jar monq.programs.DictFilter -t elem -e plain -ie UTF-8 -oe UTF-8 automata/acc150612.mwt" #| "java -cp target/scala-2.10/europepmc-identifier-extractor-assembly-0.1-SNAPSHOT.jar ukpmc.ValidateAccessionNumber -stdpipe" !
 }
 
-lazy val testXXX = taskKey[Unit]("Prints 'Hello World'")
+// lazy val testXXX = taskKey[Unit]("Prints 'Hello World'")
 
 // testXXX := {
 //  "cat test/xxx.txt" #| "java -cp lib/monq-1.7.1.jar monq.programs.DictFilter -t elem -e plain -ie UTF-8 -oe UTF-8 automata/xxx.mwt" !
 //}
+
+lazy val generateEFO = taskKey[Unit]("Generate EFO dictionary")
+
+generateEFO := {
+	"rdfparse http://www.ebi.ac.uk/efo/efo.owl" #> file("/tmp/xxxyyyzzz.ttl") #&& "arq --data=/tmp/xxxyyyzzz.ttl --query=sparql/efoDPh.rq --results=TSV" #| "bin/efoDPh.rb 2" #> file("automata/efoDPh.mwt") !
+}
 
 val deployTask = TaskKey[Unit]("deploy", "Copies assembly jar to remote location")
 
@@ -60,6 +66,22 @@ annotate := {
   val to = "annotation" + test_date
   val run = toDir + "/run.sh"
   s"ssh $account cd ~; rm -rf $toDir; mkdir $toDir; run_pipeline xml source $to annotation $date $test_date | head -1 | sh" !
+}
+
+val rdf = inputKey[Unit]("4rdf task.")
+
+rdf := {
+  val args: Seq[String] = spaceDelimited("<arg>").parsed
+  // val Seq(ext, from, to, mode, date, test_date) = args
+  val Seq(date, test_date) = args
+  val account = "jhkim@ebi-001.ebi.ac.uk"
+  val wd = "/nfs/research2/textmining/jeehyub/pmc/"
+  val fromDir = wd + date + "/xml/annotation" + test_date
+  val toDir = wd + date + "/xml/4rdf" + test_date
+  val from = "annotation" + test_date
+  val to = "4rdf" + test_date
+  val run = toDir + "/run.sh"
+  s"ssh $account cd ~; rm -rf $toDir; mkdir $toDir; run_pipeline xml $from $to 4rdf $date $test_date | head -1 | sh" !
 }
 
 // prepareWorkingDirectory
