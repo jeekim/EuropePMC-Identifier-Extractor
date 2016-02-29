@@ -1,5 +1,5 @@
 <mwt>
-  <template><z:acc db="%1" valmethod="%2" domain="%3" context="%4" wsize="%5">%0</z:acc></template>
+  <template><z:acc db="%1" valmethod="%2" domain="%3" context="%4" wsize="%5" sec="%6">%0</z:acc></template>
 
   <r p1="erc" p2="contextOnly" p3="" p4="(?i)(European Research Council|ERC grant|ERC advanced grant|ERC starting grant|ERC consolidator grant|ERC proof-of-concept grant|ERC-20[0-1][0-9]-)" p5="60">[236][0-9][0-9][0-9][0-9][0-9]</r>
 

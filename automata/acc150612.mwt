@@ -1,0 +1,77 @@
+<mwt>
+  <template><z:acc db="%1" valmethod="%2" domain="%3" context="%4" wsize="%5" sec="%6">%0</z:acc></template>
+  <!-- case class for this? -->
+  <!--template><z:acc db="%1" valmethod="%2" domain="%3" context="%4" wsize="%5" boundary="%6">%0</z:acc></template-->
+
+  <!-- TODO type-level programming. e.g., type="disease", behaviours should be different. -->
+
+  <!-- gen -->
+  <r p1="gen" p2="onlineWithContext" p3="embl" p4="(?i)(genbank|\bgen\b|\bena\b|ddbj|embl|european nucleotide archive)" p5="20000">([A-NR-Z][0-9][0-9][0-9][0-9][0-9]|[A-K][A-Z][0-9][0-9][0-9][0-9][0-9][0-9]|[A-J][A-Z][A-Z][0-9][0-9][0-9][0-9][0-9]|[ABCDEG][A-Z][A-Z][A-Z][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]?[0-9]?|A[A-Z][A-Z][A-Z][A-Z][0-9][0-9][0-9][0-9][0-9][0-9][0-9])([.][0-9]+)?</r>
+
+  <!-- sprot -->
+  <r p1="sprot" p2="onlineWithContext" p3="uniprot" p4="(?i)(swiss-?prot|sprot|uniprot|swiss prot)" p5="20000">([a-nr-zA-NR-Z][0-9][a-zA-Z][a-zA-Z0-9][a-zA-Z0-9][0-9]|[opqOPQ][0-9][a-zA-Z0-9][a-zA-Z0-9][a-zA-Z0-9][0-9])([.][0-9]+)?</r>
+
+  <!-- interpro -->
+  <r p1="interpro" p2="onlineWithContext" p3="interpro" p4="(?i)(interpro)" p5="20000">[iI][pP][rR][0-9][0-9][0-9][0-9][0-9][0-9]</r>
+
+  <!-- pdb -->
+  <r p1="pdb" p2="onlineWithContext" p3="pdbe" p4="(?i)(pdb|(?:protein +data *bank))" p5="20000">[0-9][a-zA-Z0-9][a-zA-Z0-9][a-zA-Z0-9]</r>
+
+  <!-- arrayexpress -->
+  <r p1="arrayexpress" p2="onlineWithContext" p3="geneExpression" p4="(?i)(arrayexpress)" p5="20000">E\-[A-Z][A-Z][A-Z][A-Z]\-[0-9]+</r>
+
+  <!-- ensembl -->
+  <r p1="ensembl" p2="onlineWithContext" p3="ensemblRoot" p4="(?i)(ensembl)" p5="20000">[eE][nN][sS][a-zA-Z]*[gG][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]+</r>
+  <r p1="ensembl" p2="contextOnly" p3="ensemblRoot" p4="(?i)(ensembl)" p5="20000">[eE][nN][sS][a-zA-Z]*[ptPT][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]+</r>
+
+  <!-- omim -->
+  <!-- onlineWithBoundary -->
+  <r p1="omim" p2="onlineWithContext" p3="omim" p4="(?i)(o*mim)" p5="20000" p6="ACK">[0-9][0-9][0-9][0-9][0-9][0-9]</r>
+
+  <!-- pfam -->
+  <r p1="pfam" p2="onlineWithContext" p3="pfam" p4="(?i)(pfam)" p5="20000">PF(AM)?[0-9][0-9][0-9][0-9][0-9]</r>
+  <!--r p1="pfam" p2="cachedWithContext" p3="pfam" p4="(?i)(pfam)" p5="20000">PF(AM)?[0-9][0-9][0-9][0-9][0-9]</r-->
+
+  <!-- refseq -->
+  <r p1="refseq" p2="contextOnly" p3="" p4="(?i)(refseq|genbank)" p5="20000">(AC|AP|NC|NG|NM|NP|NR|NT|NW|NZ|XM|XP|XR|YP|ZP|NS)_([A-Z][A-Z][A-Z][A-Z])*[0-9][0-9][0-9][0-9][0-9][0-9][0-9]?[0-9]?[0-9]?([.][0-9]+)?</r>
+
+  <!-- refsnp -->
+  <r p1="refsnp" p2="contextOnly" p3="" p4="(?i)(snps*)" p5="20000">rs[0-9][0-9][0-9][0-9][0-9][0-9]?[0-9]?[0-9]?[0-9]?</r>
+
+  <!-- doi -->
+  <r p1="doi" p2="onlineWithContext" p3="doi" p4="(?i)(doi)" p5="20000">10\.[0-9][0-9][0-9][0-9]+/[^ ()\"<>]+</r>
+
+  <!-- go -->
+  <r p1="go" p2="onlineWithContext" p3="go" p4="(?i)(go|gene ontology)" p5="20000">GO:[0-9][0-9][0-9][0-9][0-9][0-9][0-9]</r>
+
+  <!-- ega -->
+  <r p1="ega" p2="onlineWithContext" p3="ega" p4="(?i)(ega)" p5="20000">EGAS[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]</r>
+
+  <!-- pxd -->
+  <r p1="pxd" p2="onlineWithContext" p3="pride" p4="(?i)(pxd|proteomexchange)" p5="20000">(R)?PXD[0-9][0-9][0-9][0-9][0-9][0-9]</r>
+
+  <!-- biosample -->
+  <r p1="biosample" p2="onlineWithContext" p3="biosamples" p4="(?i)(biosample)" p5="20000">SAM[NED][A-Z]?[0-9]+</r>
+
+  <!-- bioproject -->
+  <r p1="bioproject" p2="onlineWithContext" p3="project" p4="(?i)(bioproject)" p5="20000">PRJ[DEN][A-Z][0-9]+</r>
+
+  <!-- treefam -->
+  <r p1="treefam" p2="onlineWithContext" p3="treefam" p4="(?i)(treefam)" p5="20000">TF[0-9][0-9][0-9][0-9][0-9][0-9]</r>
+
+  <!-- eudract -->
+  <r p1="eudract" p2="contextOnly" p3="" p4="(?i)(eudract|trial)" p5="20000">[0-9][0-9][0-9][0-9]\-[0-9][0-9][0-9][0-9][0-9][0-9]\-[0-9][0-9]</r>
+
+  <!-- emdb -->
+  <r p1="emdb" p2="onlineWithContext" p3="emdb" p4="(?i)(emdb)" p5="20000">EMD\-[0-9][0-9][0-9][0-9]</r>
+
+  <!-- nct -->
+  <r p1="nct" p2="contextOnly" p3="" p4="(?i)(trial)" p5="20000">NCT[0-0][0-9][0-9][0-9][0-9][0-9][0-9][0-9]</r>
+
+  <template>%0</template>
+    <r><z:[^>]*>(.*</z)!:[^>]*></r>
+    <r>="([^">]*)"</r>
+    <!-- TODO filtering rules for pdb e.g., 4min, etc. -->
+    <r>[0-9]+day</r>
+    <r>[0-9][0-9][0-9][0-9]</r>
+</mwt>
