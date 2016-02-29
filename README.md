@@ -1,4 +1,4 @@
-# Agile Context-Dependent Dictionary-Based Text-Mining Pipeline
+# Identifiers Extractor
 
 [![Build Status](https://travis-ci.org/jeekim/EuropePMC-Identifier-Extractor.svg)](https://travis-ci.org/jeekim/EuropePMC-Identifier-Extractor)
 
