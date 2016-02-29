@@ -39,6 +39,12 @@ generateEFO := {
 	"rdfparse http://www.ebi.ac.uk/efo/efo.owl" #> file("/tmp/xxxyyyzzz.ttl") #&& "arq --data=/tmp/xxxyyyzzz.ttl --query=sparql/efoDPh.rq --results=TSV" #| "bin/efoDPh.rb 2" #> file("automata/efoDPh.mwt") !
 }
 
+lazy val generateDOID = taskKey[Unit]("Generate DOID dictionary")
+
+generateDOID := {
+	"rdfparse http://www.ebi.ac.uk/ols/beta/ontologies/doid/download" #> file("/tmp/xxxyyyzzz.ttl") #&& "arq --data=/tmp/xxxyyyzzz.ttl --query=sparql/doid.rq --results=TSV" #| "bin/doid.rb 2" #> file("automata/doid.mwt") !
+}
+
 val deployTask = TaskKey[Unit]("deploy", "Copies assembly jar to remote location")
 
 deployTask <<= assembly map { (asm) =>

@@ -29,8 +29,9 @@ You need to create a dictionary based on mwt format and format your input docume
 
 #### How to build a dictionary?
 
-- from tsv
-- from identifiers.org
+- from owl
+- (TODO) from tsv
+- (TODO) from identifiers.org
 
 #### Input document format
 
