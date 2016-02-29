@@ -4,20 +4,15 @@
 
 A text-mining pipeline to extract identifiers such as European Research Council grant ids in free text. The pipeline mainly consists of two java programs.
 
- 1. Dictionary builder. Given a tsv file, build an MWT-based dictionary.
+ 1. (TODO) Dictionary builder. Given a tsv file, build an MWT-based dictionary.
  2. Dictionary-based tagger. Given a dictionary, the tagger identifies terms in the dictionary using a Java Finite Automata library. 
  3. Validator. For each identified term, the validator removes an errorneous term using several mechanisms (contextual information, online validation, etc.).
 
 ### How to build?
 
-
 ```
 sbt assembly
 ```
-
-### How to build a container?
-
-TODO
 
 ### How to use?
 
@@ -74,11 +69,6 @@ or
 cat test/accnums.txt | \
 java -cp lib/monq-1.7.1.jar monq.programs.DictFilter -t elem -e plain -ie UTF-8 -oe UTF-8 automata/acc150612.mwt | \
 java -cp target/scala-2.10/europepmc-identifier-extractor-assembly-0.1-SNAPSHOT.jar ukpmc.ValidateAccessionNumber -stdpipe
-
-or
-
-sbt
-> runExample
 ```
 
 ##### Running as server
@@ -89,17 +79,10 @@ java -cp target/scala-2.10/europepmc-identifier-extractor-assembly-0.1-SNAPSHOT.
 echo "<SENT><plain>pdb 1aj9</plain></SENT>" | java -cp lib/monq-1.7.1.jar monq.programs.DistFilter -c . 'host=localhost;port=3333' 'host=localhost;port=7811'
 ```
 
-##### Running as container (e.g., Docker)
-
-TODO
-
-##### Running on AWS
-
-TODO
 
 ```
-git clone https://github.com/jeekim/EuropePMC-Identifier-Extractor.git --branch test
-cd ...
+git clone https://github.com/jeekim/EuropePMC-Identifier-Extractor.git
+cd ..
 sbt assembly
 ...
 ```
@@ -107,7 +90,10 @@ sbt assembly
 ### TODO
 
 - to implement ! for negation.
-- sbt plugin for plug and play?
+- sbt plugin for plug and play.
+- to build a container.
+- to run as container (e.g., Docker)
+- to nun on AWS
 
 ### Acknowledgements
 
@@ -116,4 +102,3 @@ This work was supported by European Research Council (H2020 ERC-EuropePMC-2-2014
 
 [1]: http://europepmc.org/articles/PMC3667078
 [2]: http://europepmc.org/abstract/MED/18006544
-
