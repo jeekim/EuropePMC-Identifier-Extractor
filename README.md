@@ -79,14 +79,6 @@ java -cp target/scala-2.10/europepmc-identifier-extractor-assembly-0.1-SNAPSHOT.
 echo "<SENT><plain>pdb 1aj9</plain></SENT>" | java -cp lib/monq-1.7.1.jar monq.programs.DistFilter -c . 'host=localhost;port=3333' 'host=localhost;port=7811'
 ```
 
-
-```
-git clone https://github.com/jeekim/EuropePMC-Identifier-Extractor.git
-cd ..
-sbt assembly
-...
-```
-
 ### TODO
 
 - to implement ! for negation.
