@@ -48,7 +48,7 @@ generateDOID := {
 val deployTask = TaskKey[Unit]("deploy", "Copies assembly jar to remote location")
 
 deployTask <<= assembly map { (asm) =>
-  val account = "jhkim@ebi-001.ebi.ac.uk"
+  val account = ""
   val local = asm.getPath
   val remote = account + ":" + "/nfs/misc/literature/textmining/ePMC/lib/" + asm.getName
   println(s"Copying: $local -> $account:$remote")
