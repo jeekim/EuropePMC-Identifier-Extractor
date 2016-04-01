@@ -15,23 +15,18 @@ scalacOptions in (Compile,doc) := Seq("-groups", "-implicits")
 
 scalacOptions in Test ++= Seq("-Yrangepos")
 
-lazy val testERC = taskKey[Unit]("Prints 'Hello World'")
+lazy val testERC = taskKey[Unit]("Prints 'ERC test results'")
 
 testERC := {
   "cat test/ercfunds.txt" #| "java -cp lib/monq-1.7.1.jar monq.programs.DictFilter -t elem -e plain -ie UTF-8 -oe UTF-8 automata/grants150714.mwt" #| "java -cp target/scala-2.10/europepmc-identifier-extractor-assembly-0.1-SNAPSHOT.jar ukpmc.ValidateAccessionNumber -stdpipe" !
 }
 
-lazy val testAcc = taskKey[Unit]("Prints 'Hello World'")
+lazy val testAcc = taskKey[Unit]("Prints 'Acc test results'")
 
 testAcc := {
   "cat test/accnums.txt" #| "java -cp lib/monq-1.7.1.jar monq.programs.DictFilter -t elem -e plain -ie UTF-8 -oe UTF-8 automata/acc150612.mwt" #| "java -cp target/scala-2.10/europepmc-identifier-extractor-assembly-0.1-SNAPSHOT.jar ukpmc.ValidateAccessionNumber -stdpipe" !
 }
 
-// lazy val testXXX = taskKey[Unit]("Prints 'Hello World'")
-
-// testXXX := {
-//  "cat test/xxx.txt" #| "java -cp lib/monq-1.7.1.jar monq.programs.DictFilter -t elem -e plain -ie UTF-8 -oe UTF-8 automata/xxx.mwt" !
-//}
 
 lazy val generateEFO = taskKey[Unit]("Generate EFO dictionary")
 
@@ -43,6 +38,24 @@ lazy val generateDOID = taskKey[Unit]("Generate DOID dictionary")
 
 generateDOID := {
 	"rdfparse http://www.ebi.ac.uk/ols/beta/ontologies/doid/download" #> file("/tmp/xxxyyyzzz.ttl") #&& "arq --data=/tmp/xxxyyyzzz.ttl --query=sparql/doid.rq --results=TSV" #| "bin/doid.rb 2" #> file("automata/doid.mwt") !
+}
+
+lazy val generateORDO = taskKey[Unit]("Generate ORDO dictionary")
+
+generateORDO := {
+	"rdfparse http://www.ebi.ac.uk/ols/beta/ontologies/ordo/download" #> file("/tmp/xxxyyyzzz.ttl") #&& "arq --data=/tmp/xxxyyyzzz.ttl --query=sparql/ordo.rq --results=TSV" #| "bin/ordo.rb 2" #> file("automata/ordo.mwt") !
+}
+
+lazy val generateHP = taskKey[Unit]("Generate HP dictionary")
+
+generateHP := {
+	"rdfparse http://www.ebi.ac.uk/ols/beta/ontologies/hp/download" #> file("/tmp/xxxyyyzzz.ttl") #&& "arq --data=/tmp/xxxyyyzzz.ttl --query=sparql/hp.rq --results=TSV" #| "bin/hp.rb 2" #> file("automata/hp.mwt") !
+}
+
+lazy val generateMP = taskKey[Unit]("Generate MP dictionary")
+
+generateMP := {
+	"rdfparse http://www.ebi.ac.uk/ols/beta/ontologies/mp/download" #> file("/tmp/xxxyyyzzz.ttl") #&& "arq --data=/tmp/xxxyyyzzz.ttl --query=sparql/mp.rq --results=TSV" #| "bin/mp.rb 2" #> file("automata/mp.mwt") !
 }
 
 val deployTask = TaskKey[Unit]("deploy", "Copies assembly jar to remote location")
