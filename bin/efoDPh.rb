@@ -31,12 +31,13 @@ STDIN.readlines.drop(1).each do |line|
   # term = term.gsub(/\(finding\)/, 'finding')
   # term = term.gsub(/\[Ambiguous\]/, 'Ambiguous')
 
-  if (/([Dd]elta|[Aa]lpha|[Bb]eta|[Gg]amma)/ =~ term) then
+  if (/([Dd]elta|[Aa]lpha|[Bb]eta|[Gg]amma|')/ =~ term) then
     puts ("  <t p1=\"#{id}\" p2=\"#{cat}\">#{term.strip}</t>")
     term = term.gsub(/[Aa]lpha/, 'α')
     term = term.gsub(/[Bb]eta/, 'β')
     term = term.gsub(/[Gg]amma/, 'γ')
     term = term.gsub(/[Dd]elta/, "δ")
+    term = term.gsub(/'/, "’")
   end
 
   #term = term.gsub(/Delta/, 'δ')
