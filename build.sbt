@@ -39,7 +39,6 @@ lazy val generateChEBI = taskKey[Unit]("Generate ChEBI dictionary")
 generateChEBI := {
   // ChEBI need a big memory for arq
 	"rdfparse /home/jee/Downloads/chebi.owl" #> file("/tmp/xxxyyyzzz.ttl") #&& "arq --data=/tmp/xxxyyyzzz.ttl --query=sparql/chebi.rq --results=TSV" #| "bin/chebi.rb" #> file("automata/chebi.mwt") !
-	// "rdfparse http://www.ebi.ac.uk/efo/efo.owl" #> file("/tmp/xxxyyyzzz.ttl") #&& "arq --data=/tmp/xxxyyyzzz.ttl --query=sparql/efoDPh.rq --results=TSV" #| "bin/efoDPh.rb 2" #> file("automata/efoDPh.mwt") !
 }
 
 lazy val generateDOID = taskKey[Unit]("Generate DOID dictionary")
