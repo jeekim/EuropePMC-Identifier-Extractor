@@ -54,6 +54,8 @@ STDIN.readlines.drop(1).each do |line|
     ;
   elsif (id == "EFO_0000545" and term == "sterile") then
     ;
+  elsif (id == "EFO_0001365" and term == "Amended") then
+    ;
   else
     puts ("  <t p1=\"#{id}\" p2=\"#{cat}\">#{term.strip}</t>") if (term.size > bigger_than)
   end

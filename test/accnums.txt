@@ -10,7 +10,7 @@
 <article>
 <text>
 <SENT sid="5" pm="."><plain> omim 603878 </plain></SENT>
-<SENT sid="6" pm="."><plain>3) Sequences specifically obtained for this study have been deposited in [accession: EF151088–EF151123 and EF998999].</plain></SENT>
+<SENT sid="6" pm="."><plain>3) genbank Sequences specifically obtained for this study have been deposited in [accession: EF151088–EF151123 and EF998999].</plain></SENT>
 <SENT sid="7" pm="."><plain>doi/10.1073/pnas.040460297 10.2210/PDB2OBS/PDB) </plain></SENT>
 <SENT sid="8" pm="."><plain>doi doi:10.1594/PANGAEA.64577788) hi</plain></SENT>
 <SENT sid="9" pm="."><plain>doi:10.15944/WDCC/HOAPS3_MONTHLY </plain></SENT>
