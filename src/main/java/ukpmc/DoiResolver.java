@@ -16,7 +16,7 @@ public class DoiResolver implements IDResolver {
 
    private URL toURL(String doi) {
       try {
-        URL url = new URL("http", host, port, '/' + doi.replaceAll("#", "%23").replaceAll("\\[", "%5B").replaceAll("\\]", "%5D"));
+        URL url = new URL("https", host, port, '/' + doi.replaceAll("#", "%23").replaceAll("\\[", "%5B").replaceAll("\\]", "%5D"));
         return url;
       } catch (MalformedURLException e) {
         throw new IllegalArgumentException();
