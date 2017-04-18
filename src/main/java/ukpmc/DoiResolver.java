@@ -11,12 +11,16 @@ import ukpmc.scala.IDResolver;
 import ukpmc.scala.QueryGenerator;
 
 public class DoiResolver implements IDResolver {
-   private String host = "data.datacite.org"; // TODO make it more generic for any sites?
+   private final String HOST = "data.datacite.org"; // TODO make it more generic for any sites?
    private int port = -1;
+
+
+   public DoiResolver() {
+   }
 
    private URL toURL(String doi) {
       try {
-        URL url = new URL("https", host, port, '/' + doi.replaceAll("#", "%23").replaceAll("\\[", "%5B").replaceAll("\\]", "%5D"));
+        URL url = new URL("https", HOST, port, '/' + doi.replaceAll("#", "%23").replaceAll("\\[", "%5B").replaceAll("\\]", "%5D"));
         return url;
       } catch (MalformedURLException e) {
         throw new IllegalArgumentException();
