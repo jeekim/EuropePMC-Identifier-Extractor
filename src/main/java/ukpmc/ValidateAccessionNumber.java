@@ -53,9 +53,9 @@ public class ValidateAccessionNumber implements Service {
    private static Dfa dfa_plain = null;
    private static Dfa dfa_entity = null;
    
-   private static Map<String, String> cachedValidations = new HashMap<String, String>();
+   private static Map<String, String> cachedValidations = new HashMap<>();
    private static Map<String, String> BlacklistDoiPrefix = new HashMap<>();
-   private static Map<String, Integer> numOfAccInBoundary = new HashMap<String, Integer>();
+   private static Map<String, Integer> numOfAccInBoundary = new HashMap<>();
 
    private InputStream in = null;
    private OutputStream out = null;
@@ -130,11 +130,9 @@ public class ValidateAccessionNumber implements Service {
    private static String reEmbedContent(String taggedF, StringBuilder yytext, Map<String, String> map, int start) {
       int contentBegins = yytext.indexOf(map.get(Xml.CONTENT), start);
       int contentLength = map.get(Xml.CONTENT).length();
-      StringBuilder newelem = new StringBuilder();
-      newelem.append(yytext.substring(start, contentBegins));
-      newelem.append(taggedF);
-      newelem.append(yytext.substring(contentBegins + contentLength));
-      return newelem.toString();
+      String newelem = yytext.substring(start, contentBegins) + taggedF
+              + yytext.substring(contentBegins + contentLength);
+      return newelem;
    }
 
    /**
@@ -210,9 +208,11 @@ public class ValidateAccessionNumber implements Service {
             } else if ("contextOnly".equals(m.valmethod())) {
                if (isAnySameTypeBefore(m.db()) || isInContext(textBeforeEntity, m.ctx())) isValid = true;
             } else if ("cachedWithContext".equals(m.valmethod())) {
-               if ((isAnySameTypeBefore(m.db()) || isInContext(textBeforeEntity, m.ctx())) && isCachedValid(m.db(), m.content(), m.domain())) isValid = true;
+               if ((isAnySameTypeBefore(m.db()) || isInContext(textBeforeEntity, m.ctx())) && isCachedValid(m.db(),
+                       m.content(), m.domain())) isValid = true;
             } else if ("onlineWithContext".equals(m.valmethod())) {
-               if ((isAnySameTypeBefore(m.db()) || isInContext(textBeforeEntity, m.ctx())) && isOnlineValid(m.db(), m.content(), m.domain())) isValid = true;
+               if ((isAnySameTypeBefore(m.db()) || isInContext(textBeforeEntity, m.ctx())) && isOnlineValid(m.db(),
+                       m.content(), m.domain())) isValid = true;
             } else if ("context".equals(m.valmethod())) {
                if (isInContext(textBeforeEntity, m.ctx())) isValid = true;
             } else if ("cached".equals(m.valmethod())) {
@@ -416,12 +416,7 @@ public class ValidateAccessionNumber implements Service {
       } else {
          LOGGER.info("ValidateAccessionNumber will listen on " + port + " .");
          try {      
-            FilterServiceFactory fsf = new FilterServiceFactory(new ServiceFactory() {
-                 public Service createService(InputStream in, OutputStream out, Object params)
-                 throws ServiceCreateException {
-                    return new ValidateAccessionNumber(in, out);
-                 }
-            });
+            FilterServiceFactory fsf = new FilterServiceFactory((in, out, params) -> new ValidateAccessionNumber(in, out));
 
             TcpServer svr = new TcpServer(new ServerSocket(port), fsf, 50);
             svr.setLogging(System.out); 
