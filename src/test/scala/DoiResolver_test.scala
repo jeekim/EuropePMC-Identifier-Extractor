@@ -23,11 +23,11 @@ class DoiResolverSpec extends FlatSpec with Matchers {
   }
 
   "isCachedValid" should "validate pfam, PF00003 as true" in {
-    ValidateAccessionNumber.isCachedValid("pfam", "PF00003", "pfam") should be (true)
+    ValidateAccessionNumber.isIdValidInCache("pfam", "PF00003", "pfam") should be (true)
   }
 
   "isCachedValid" should "validate pfam, pf00003333 as false" in {
-    ValidateAccessionNumber.isCachedValid("pfam", "pf00003333", "pfam") should be (false)
+    ValidateAccessionNumber.isIdValidInCache("pfam", "pf00003333", "pfam") should be (false)
   }
 
   "normalizeID" should "normalizes 12345.3 to 12345" in {

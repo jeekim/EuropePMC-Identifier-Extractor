@@ -33,8 +33,6 @@ import monq.jfa.ReaderCharSource;
 
 import monq.net.FilterServiceFactory;
 import monq.net.Service;
-import monq.net.ServiceCreateException;
-import monq.net.ServiceFactory;
 import monq.net.TcpServer;
 
 import ukpmc.scala.MwtParser;
@@ -190,7 +188,6 @@ public class ValidateAccessionNumber implements Service {
       }
    };
 
-
    /**
     *  This processes an accession number
     *  noval: refseq, refsnp, context: eudract offline: pfam, online (+ offline): the rest
@@ -203,28 +200,28 @@ public class ValidateAccessionNumber implements Service {
 	        String textBeforeEntity = getTextBeforeEntity(yytext, start, m.wsize());
 
             boolean isValid = false;
-	        if ("noval".equals(m.valmethod())) {
+	        if ("noval".equals(m.valMethod())) {
 	            isValid = true;
-            } else if ("contextOnly".equals(m.valmethod())) {
+            } else if ("contextOnly".equals(m.valMethod())) {
                if (isAnySameTypeBefore(m.db()) || isInContext(textBeforeEntity, m.ctx())) isValid = true;
-            } else if ("cachedWithContext".equals(m.valmethod())) {
-               if ((isAnySameTypeBefore(m.db()) || isInContext(textBeforeEntity, m.ctx())) && isCachedValid(m.db(),
+            } else if ("cachedWithContext".equals(m.valMethod())) {
+               if ((isAnySameTypeBefore(m.db()) || isInContext(textBeforeEntity, m.ctx())) && isIdValidInCache(m.db(),
                        m.content(), m.domain())) isValid = true;
-            } else if ("onlineWithContext".equals(m.valmethod())) {
+            } else if ("onlineWithContext".equals(m.valMethod())) {
                if ((isAnySameTypeBefore(m.db()) || isInContext(textBeforeEntity, m.ctx())) && isOnlineValid(m.db(),
                        m.content(), m.domain())) isValid = true;
-            } else if ("context".equals(m.valmethod())) {
+            } else if ("context".equals(m.valMethod())) {
                if (isInContext(textBeforeEntity, m.ctx())) isValid = true;
-            } else if ("cached".equals(m.valmethod())) {
-               if (isCachedValid(m.db(), m.content(), m.domain())) isValid = true;
-            } else if ("online".equals(m.valmethod())) {
+            } else if ("cached".equals(m.valMethod())) {
+               if (isIdValidInCache(m.db(), m.content(), m.domain())) isValid = true;
+            } else if ("online".equals(m.valMethod())) {
                if (isOnlineValid(m.db(), m.content(), m.domain())) isValid = true;
             }
 
             String secOrSent = runner.clientData.toString();
             if (isValid && isInValidSection(secOrSent, m.sec())) {
-                String tagged = "<" + m.tagname() +" db=\"" + m.db() + "\" ids=\"" + m.content() +"\">"+ m.content()
-                        + "</" + m.tagname() + ">";
+                String tagged = "<" + m.tagName() +" db=\"" + m.db() + "\" ids=\"" + m.content() +"\">"+ m.content()
+                        + "</" + m.tagName() + ">";
                 yytext.replace(start, yytext.length(), tagged);
                 numOfAccInBoundary.put(m.db(), 1);
             } else { // not valid
@@ -292,7 +289,7 @@ public class ValidateAccessionNumber implements Service {
      * @param domain
      * @return
      */
-   static boolean isCachedValid(String db, String id, String domain) {
+   static boolean isIdValidInCache(String db, String id, String domain) {
       id = normalizeID(db, id);
       boolean isValid = false;
       if (cachedValidations.containsKey(domain + id)) {
@@ -339,11 +336,7 @@ public class ValidateAccessionNumber implements Service {
      * @return
      */
    public static boolean isAccValid(String domain, String accno) {
-      if (ar.isValidID(domain, accno)) {
-        return true;
-      } else {
-        return false;
-      }
+      return ar.isValidID(domain, accno);
    }
 
    /**
@@ -400,9 +393,9 @@ public class ValidateAccessionNumber implements Service {
             port = Integer.parseInt(arg[0]);
             j = 1;
          }
-      } catch (java.lang.NumberFormatException ne) { 
+      } catch (java.lang.NumberFormatException ne) {
          LOGGER.info(arg[0]);
-      }   
+      }
 
       for (int i = j; i < arg.length; i++) {
          if ("-stdpipe".equals(arg[i])) {
@@ -416,13 +409,14 @@ public class ValidateAccessionNumber implements Service {
       } else {
          LOGGER.info("ValidateAccessionNumber will listen on " + port + " .");
          try {      
-            FilterServiceFactory fsf = new FilterServiceFactory((in, out, params) -> new ValidateAccessionNumber(in, out));
+            FilterServiceFactory fsf = new FilterServiceFactory(
+                    (in, out, params) -> new ValidateAccessionNumber(in, out));
 
             TcpServer svr = new TcpServer(new ServerSocket(port), fsf, 50);
             svr.setLogging(System.out); 
             svr.serve(); 
          } catch (java.net.BindException be) {
-            LOGGER.warning("Couldn't start server"+be.toString()); 
+            LOGGER.warning("Couldn't start server"+be.toString());
             System.exit(1);
          } 
       }
