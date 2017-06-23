@@ -1,0 +1,74 @@
+<mwt>
+  <template><z:acc db="%1" valmethod="%2" domain="%3" context="%4" wsize="%5" sec="%6">%0</z:acc></template>
+
+  <r p1="Runiprot" p2="noval" p3="" p4="" p5="">UniProt</r>
+  <r p1="Runiprot" p2="noval" p3="" p4="" p5="">UniProtKB</r>
+  <r p1="Runiprot" p2="noval" p3="" p4="" p5="">Swiss[ \-]*[Pp]rot</r>
+
+  <r p1="Rpride" p2="noval" p3="" p4="" p5="">PRIDE</r>
+  <r p1="Rpride" p2="noval" p3="" p4="" p5="">PRoteomics IDEntifications database</r>
+
+  <r p1="Rpdb" p2="contextOnly" p3="" p4="(?i)(protein|data|bank)" p5="5000">PDB</r>
+  <r p1="Rpdb" p2="noval" p3="" p4="" p5="">Protein Databank</r>
+  <r p1="Rpdb" p2="noval" p3="" p4="" p5="">Protein DataBank</r>
+  <r p1="Rpdb" p2="noval" p3="" p4="" p5="">Protein Data Bank</r>
+  <r p1="Rpdb" p2="noval" p3="" p4="" p5="">PDBe</r>
+  <r p1="Rpdb" p2="noval" p3="" p4="" p5="">Protein Databank in Europe</r>
+  <r p1="Rpdb" p2="noval" p3="" p4="" p5="">Protein DataBank in Europe</r>
+  <r p1="Rpdb" p2="noval" p3="" p4="" p5="">Protein Data Bank in Europe</r>
+
+  <r p1="Rena" p2="contextOnly" p3="" p4="(?i)(nucleotide|archive)" p5="5000">ENA</r>
+  <!--r p1="Rena" p2="contextOnly" p3="" p4="(?i)(european|nucleotide|archive)" p5="5000">ENA</r-->
+  <r p1="Rena" p2="noval" p3="" p4="" p5="">European Nucleotide Archive</r>
+  <r p1="Rena" p2="noval" p3="" p4="" p5="">EMBL Nucleotide Sequence Database</r>
+
+  <r p1="Rinterpro" p2="noval" p3="" p4="" p5="">InterPro</r>
+  <r p1="Rinterpro" p2="noval" p3="" p4="" p5="">InterProScan</r>
+
+  <r p1="Repmc" p2="noval" p3="" p4="" p5="">EuropePMC</r>
+  <r p1="Repmc" p2="noval" p3="" p4="" p5="">Europe PMC</r>
+  <r p1="Repmc" p2="noval" p3="" p4="" p5="">Europe PubMed Central</r>
+  <r p1="Repmc" p2="noval" p3="" p4="" p5="">europepmc\.org</r>
+
+  <r p1="Rpfam" p2="noval" p3="" p4="" p5="">Pfam</r>
+  <r p1="Rpfam" p2="noval" p3="" p4="" p5="">Protein Family Database</r>
+
+  <!--r p1="Rarrayexpress" p2="noval" p3="" p4="" p5="">ArrayExpress</r>
+  <r p1="Rarrayexpress" p2="noval" p3="" p4="" p5="">Array Express</r>
+
+  <r p1="Rbiomodels" p2="noval" p3="" p4="" p5="">BioModels</r>
+
+  <r p1="Rchebi" p2="noval" p3="" p4="" p5="">ChEBI</r>
+
+  <r p1="Rchebi" p2="noval" p3="" p4="" p5="">Chemical Entities of Biological Interest</r>
+
+  <r p1="Rchembl" p2="noval" p3="" p4="" p5="">ChEMBL</r>
+
+  <r p1="Rensembl" p2="noval" p3="" p4="" p5="">Ensembl</r>
+  <r p1="Rensembl" p2="noval" p3="" p4="" p5="">Ensembl [Gg]enomes</r>
+
+  <r p1="Rensembl" p2="noval" p3="" p4="" p5="">Ensembl [Bb]acteria</r>
+  <r p1="Rensembl" p2="noval" p3="" p4="" p5="">Ensembl [Ff]ungi</r>
+  <r p1="Rensembl" p2="noval" p3="" p4="" p5="">Ensembl [Mm]etazoa</r>
+  <r p1="Rensembl" p2="noval" p3="" p4="" p5="">Ensembl [Pp]lants</r>
+  <r p1="Rensembl" p2="noval" p3="" p4="" p5="">Ensembl [Pp]rotists</r>
+  <r p1="Rensembl" p2="noval" p3="" p4="" p5="">Ensembl [Gg]enomes [Bb]acteria</r>
+  <r p1="Rensembl" p2="noval" p3="" p4="" p5="">Ensembl [Gg]enomes [Ff]ungi</r>
+  <r p1="Rensembl" p2="noval" p3="" p4="" p5="">Ensembl [Gg]enomes [Mm]etazoa</r>
+  <r p1="Rensembl" p2="noval" p3="" p4="" p5="">Ensembl [Gg]enomes [Pp]lants</r>
+  <r p1="Rensembl" p2="noval" p3="" p4="" p5="">Ensembl [Gg]enomes [Pp]rotists</r>
+
+  <r p1="Rgxa" p2="noval" p3="" p4="" p5="">Expression Atlas</r>
+
+  <r p1="Rega" p2="contextOnly" p3="" p4="(?i)(european|genome|phenome|archive)" p5="5000">EGA</r>
+  <r p1="Rega" p2="noval" p3="" p4="" p5="">European Genome\-phenome Archive</r>
+
+  <r p1="Rintact" p2="noval" p3="" p4="" p5="">IntAct</r>
+
+  <r p1="Rmetabolights" p2="noval" p3="" p4="" p5="">MetaboLights</r-->
+
+  <template>%0</template>
+    <r><z:[^>]*>(.*</z)!:[^>]*></r>
+    <r>="([^"]*)"</r>
+  <!-- TODO filtering rules for pdb e.g., 4min, etc. -->
+</mwt>

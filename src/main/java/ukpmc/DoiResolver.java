@@ -9,17 +9,20 @@ import ukpmc.scala.IDResolver;
 
 public class DoiResolver implements IDResolver {
    private final String HOST; // TODO make it more generic for any sites?
-   private int port;
+   private final int PORT;
+
+   // TODO https://api.datacite.org/works/10.5061/dryad.pk045
 
    public DoiResolver() {
       HOST = "data.datacite.org";
-      port = -1;
+      PORT = -1;
    }
 
    private URL toURL(String doi) {
       try {
-        String path = '/' + doi.replaceAll("#", "%23").replaceAll("\\[", "%5B").replaceAll("\\]", "%5D");
-        URL url = new URL("https", HOST, port, path);
+        String path;
+        path = '/' + doi.replaceAll("#", "%23").replaceAll("\\[", "%5B") .replaceAll("\\]", "%5D");
+        URL url = new URL("https", HOST, PORT, path);
         return url;
       } catch (MalformedURLException e) {
         throw new IllegalArgumentException();

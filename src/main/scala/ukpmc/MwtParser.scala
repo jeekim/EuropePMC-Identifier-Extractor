@@ -5,7 +5,8 @@ import java.util.Map
 
 case class MwtAtts(tagName: String, content: String, db: String, valMethod: String, domain: String, ctx: String, wsize: Integer, sec: String)
 
-class MwtParser(val map: java.util.Map[String, String]) {
+class MwtParser(val map: Map[String, String]) {
+// class MwtParser(val map: java.util.Map[String, String]) {
 
   // <template><z:acc db="%1" valmethod="%2" domain="%3" context="%4" wsize="%5" sec="%6">%0</z:acc></template>
   def parse() = {

@@ -37,6 +37,7 @@ import monq.net.TcpServer;
 
 import ukpmc.scala.MwtParser;
 import ukpmc.scala.MwtAtts;
+import ukpmc.scala.IDResolver;
 
 @SuppressWarnings("serial")
 public class ValidateAccessionNumber implements Service {
@@ -44,8 +45,9 @@ public class ValidateAccessionNumber implements Service {
    private static final Logger LOGGER = Logger.getLogger(ValidateAccessionNumber.class.getName());
 
    private static Properties prop = new Properties();
-   private static DoiResolver dr = new DoiResolver();
-   private static AccResolver ar = new AccResolver();
+
+   private static IDResolver dr = new DoiResolver();
+   private static IDResolver ar = new AccResolver();
 
    protected static Dfa dfa_boundary = null;
    private static Dfa dfa_plain = null;
@@ -70,7 +72,7 @@ public class ValidateAccessionNumber implements Service {
     */
    private static void loadConfigurationFile() throws IOException {
       URL url = ValidateAccessionNumber.class.getResource("/validate.properties");
-      if (url == null) { throw new RuntimeException("can not find validate.properties!"); }
+      if (url == null) throw new RuntimeException("can not find validate.properties!");
       prop.load(url.openStream());
    }
 
@@ -84,17 +86,18 @@ public class ValidateAccessionNumber implements Service {
    private static void loadPredefinedResults() throws IOException {
       String predefFilename;
       predefFilename = prop.getProperty("cached");
-      URL pURL = ValidateAccessionNumber.class.getResource("/" + predefFilename);
+      URL url = ValidateAccessionNumber.class.getResource("/" + predefFilename);
 
-      BufferedReader reader = new BufferedReader(new InputStreamReader(pURL.openStream()));
+      BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
 
       String line;
       while ((line = reader.readLine()) != null) {
-         if (line.indexOf("#") != 0) {
+         // if (line.indexOf("#") != 0) {
+         if (!line.startsWith("#")) {
             int firstSpace = line.indexOf(" ");
-            int secSpace = line.indexOf(" ", firstSpace + 1);
+            int secondSpace = line.indexOf(" ", firstSpace + 1);
             String accNo = line.substring(0, firstSpace);
-            String db = line.substring(firstSpace + 1, secSpace);
+            String db = line.substring(firstSpace + 1, secondSpace);
             cachedValidations.put(db + accNo, line);
          }
       }
@@ -119,7 +122,6 @@ public class ValidateAccessionNumber implements Service {
             BlacklistDoiPrefix.put(prefix, "Y");
          }
       }
-
       reader.close();
    }
 
@@ -276,11 +278,7 @@ public class ValidateAccessionNumber implements Service {
    private static boolean isInValidSection(String secOrSent, String blacklistSection) {
       if (blacklistSection.equals("")) {
           return true;
-      } else if (secOrSent.contains(blacklistSection)) {
-          return false;
-      } else {
-          return true;
-      }
+      } else return !secOrSent.contains(blacklistSection);
    }
 
     /**
@@ -295,7 +293,7 @@ public class ValidateAccessionNumber implements Service {
       boolean isValid = false;
       if (cachedValidations.containsKey(domain + id)) {
           String res = cachedValidations.get(domain + id);
-          if (res.indexOf(" valid " + domain) != -1) isValid = true;
+          if (res.contains(" valid " + domain)) isValid = true;
       }
       return isValid;
    }
@@ -323,11 +321,7 @@ public class ValidateAccessionNumber implements Service {
          return false;
       } else if ("10.2210/".equals(doi.substring(0, 8))) { // exception rule for PDB data center
          return true;
-      } else if (dr.isValidID("doi", doi)) {
-         return true;
-      } else {
-         return false;
-      }
+      } else return dr.isValidID("doi", doi);
    }
 
     /**
