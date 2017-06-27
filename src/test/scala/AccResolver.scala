@@ -1,24 +1,18 @@
-package ukpmc.test
+package ukpmc
 
-import ukpmc._
+// import ukpmc._
 import org.specs2._
 
 /**
    * This specification shows how to create examples using the "acceptance" style
     */
-class HelloWorldSpec extends Specification { def is = s2"""
-  This is a specification to check the 'Hello world' string
+class HelloWorldSpec extends Specification {
+  def is = s2"""
+  This is a specification to check the '10.5061/dryad.pk045' string
 
-  The 'Hello world' string should
-    contain 11 characters                             $e1
-    start with 'Hello'                                $e2
-    end with 'world'                                  $e3
-    generate '10.5061'                                $e4
+  The '10.5061/dryad.pk045' string should
+    startWith '10.5061'                                $e1
                                                       """
 
-def e1 = "Hello world" must haveSize(11)
-def e2 = "Hello world" must startWith("Hello")
-def e3 = "Hello world" must endWith("world")
-def e4 = ValidateAccessionNumber.prefixDOI("10.5061/dryad.pk045") must startWith("10.5061")
-
+  def e1 = new DoiResolver().prefixDOI("10.5061/dryad.pk045") must startWith("10.5061")
 }

@@ -1,5 +1,5 @@
-import AssemblyKeys._
-import sbt.complete.DefaultParsers._
+/* import AssemblyKeys._
+import sbt.complete.DefaultParsers._*/
 
 assemblySettings
 
@@ -15,21 +15,21 @@ lazy val testERC = taskKey[Unit]("Prints 'ERC test results'")
 testERC := {
   "cat test/ercfunds.txt" #|
 	"java -cp lib/monq-1.7.1.jar monq.programs.DictFilter -t elem -e plain -ie UTF-8 -oe UTF-8 automata/grants150714.mwt" #|
-	"java -cp target/scala-2.10/europepmc-identifier-extractor-assembly-0.1-SNAPSHOT.jar ukpmc.ValidateAccessionNumber -stdpipe" !
+	"java -cp target/scala-2.10/europepmc-identifier-extractor-assembly-0.1-SNAPSHOT.jar ukpmc.AccessionNumberFilter -stdpipe" !
 }
 
 lazy val testAcc = taskKey[Unit]("Prints 'Acc test results'")
 testAcc := {
   "cat test/accnums.txt" #|
 	"java -cp lib/monq-1.7.1.jar monq.programs.DictFilter -t elem -e plain -ie UTF-8 -oe UTF-8 automata/acc150612.mwt" #|
-	"java -cp target/scala-2.10/europepmc-identifier-extractor-assembly-0.1-SNAPSHOT.jar ukpmc.ValidateAccessionNumber -stdpipe" !
+	"java -cp target/scala-2.10/europepmc-identifier-extractor-assembly-0.1-SNAPSHOT.jar ukpmc.AccessionNumberFilter -stdpipe" !
 }
 
 lazy val testResource = taskKey[Unit]("Prints 'Resource test results'")
 testResource := {
 	"cat test/accnums.txt" #|
 	"java -cp lib/monq-1.7.1.jar monq.programs.DictFilter -t elem -e plain -ie UTF-8 -oe UTF-8 automata/resources170405.mwt" #|
-	"java -cp target/scala-2.10/europepmc-identifier-extractor-assembly-0.1-SNAPSHOT.jar ukpmc.ValidateAccessionNumber -stdpipe" !
+	"java -cp target/scala-2.10/europepmc-identifier-extractor-assembly-0.1-SNAPSHOT.jar ukpmc.AccessionNumberFilter -stdpipe" !
 }
 
 
@@ -50,6 +50,9 @@ generateChEBI := {
 	"bin/chebi.rb" #>
 	file("automata/chebi.mwt") !
 }
+
+lazy val generateGO = taskKey[Unit]("Generate GO dictionary")
+generateGO := {}
 
 lazy val generateDOID = taskKey[Unit]("Generate DOID dictionary")
 generateDOID := {

@@ -1,21 +1,21 @@
 <mwt>
-  <template><z:acc db="%1" valmethod="%2" domain="%3" context="%4" wsize="%5" sec="%6">%0</z:acc></template>
+  <template><z:resource db="%1" valmethod="%2" domain="%3" context="%4" wsize="%5" sec="%6">%0</z:resource></template>
 
   <r p1="Runiprot" p2="noval" p3="" p4="" p5="">UniProt</r>
   <r p1="Runiprot" p2="noval" p3="" p4="" p5="">UniProtKB</r>
   <r p1="Runiprot" p2="noval" p3="" p4="" p5="">Swiss[ \-]*[Pp]rot</r>
 
-  <r p1="Rpride" p2="noval" p3="" p4="" p5="">PRIDE</r>
-  <r p1="Rpride" p2="noval" p3="" p4="" p5="">PRoteomics IDEntifications database</r>
+  <r p1="Rpride" p2="noval" p3="" p4="" p5="0">PRIDE</r>
+  <r p1="Rpride" p2="noval" p3="" p4="" p5="0">PRoteomics IDEntifications database</r>
 
   <r p1="Rpdb" p2="contextOnly" p3="" p4="(?i)(protein|data|bank)" p5="5000">PDB</r>
-  <r p1="Rpdb" p2="noval" p3="" p4="" p5="">Protein Databank</r>
-  <r p1="Rpdb" p2="noval" p3="" p4="" p5="">Protein DataBank</r>
-  <r p1="Rpdb" p2="noval" p3="" p4="" p5="">Protein Data Bank</r>
-  <r p1="Rpdb" p2="noval" p3="" p4="" p5="">PDBe</r>
-  <r p1="Rpdb" p2="noval" p3="" p4="" p5="">Protein Databank in Europe</r>
-  <r p1="Rpdb" p2="noval" p3="" p4="" p5="">Protein DataBank in Europe</r>
-  <r p1="Rpdb" p2="noval" p3="" p4="" p5="">Protein Data Bank in Europe</r>
+  <r p1="Rpdb" p2="noval" p3="" p4="" p5="0">Protein Databank</r>
+  <r p1="Rpdb" p2="noval" p3="" p4="" p5="0">Protein DataBank</r>
+  <r p1="Rpdb" p2="noval" p3="" p4="" p5="0">Protein Data Bank</r>
+  <r p1="Rpdb" p2="noval" p3="" p4="" p5="0">PDBe</r>
+  <r p1="Rpdb" p2="noval" p3="" p4="" p5="0">Protein Databank in Europe</r>
+  <r p1="Rpdb" p2="noval" p3="" p4="" p5="0">Protein DataBank in Europe</r>
+  <r p1="Rpdb" p2="noval" p3="" p4="" p5="0">Protein Data Bank in Europe</r>
 
   <r p1="Rena" p2="contextOnly" p3="" p4="(?i)(nucleotide|archive)" p5="5000">ENA</r>
   <!--r p1="Rena" p2="contextOnly" p3="" p4="(?i)(european|nucleotide|archive)" p5="5000">ENA</r-->

@@ -37,31 +37,28 @@ import monq.net.TcpServer;
 
 import ukpmc.scala.MwtParser;
 import ukpmc.scala.MwtAtts;
-import ukpmc.scala.IDResolver;
+import static ukpmc.TaggerUtils.reEmbedContent;
 
-@SuppressWarnings("serial")
-public class ValidateAccessionNumber implements Service {
+public class AnnotationFilter implements Service {
 
-   private static final Logger LOGGER = Logger.getLogger(ValidateAccessionNumber.class.getName());
+   private static final Logger LOGGER = Logger.getLogger(AnnotationFilter.class.getName());
 
    private static Properties prop = new Properties();
+   private static Resolver dr = new DoiResolver();
+   private static Resolver ar = new AccResolver();
 
-   private static IDResolver dr = new DoiResolver();
-   private static IDResolver ar = new AccResolver();
-
-   protected static Dfa dfa_boundary = null;
-   private static Dfa dfa_plain = null;
-   private static Dfa dfa_entity = null;
+   protected static Dfa dfa_boundary;
+   private static Dfa dfa_plain;
+   private static Dfa dfa_entity;
    
    private static Map<String, String> cachedValidations = new HashMap<>();
-   private static Map<String, String> BlacklistDoiPrefix = new HashMap<>();
+   // private static Map<String, String> BlacklistDoiPrefix = new HashMap<>();
    private static Map<String, Integer> numOfAccInBoundary = new HashMap<>();
    // TODO: test
+   private InputStream in;
+   private OutputStream out;
 
-   private InputStream in = null;
-   private OutputStream out = null;
-
-   public ValidateAccessionNumber(InputStream in, OutputStream out) {
+   public AnnotationFilter(InputStream in, OutputStream out) {
       this.in = in;
       this.out = out;
    }
@@ -71,7 +68,7 @@ public class ValidateAccessionNumber implements Service {
     * checks that validate.properties exists and load it
     */
    private static void loadConfigurationFile() throws IOException {
-      URL url = ValidateAccessionNumber.class.getResource("/validate.properties");
+      URL url = AnnotationFilter.class.getResource("/validate.properties");
       if (url == null) throw new RuntimeException("can not find validate.properties!");
       prop.load(url.openStream());
    }
@@ -86,13 +83,12 @@ public class ValidateAccessionNumber implements Service {
    private static void loadPredefinedResults() throws IOException {
       String predefFilename;
       predefFilename = prop.getProperty("cached");
-      URL url = ValidateAccessionNumber.class.getResource("/" + predefFilename);
+      URL url = AnnotationFilter.class.getResource("/" + predefFilename);
 
       BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
 
       String line;
       while ((line = reader.readLine()) != null) {
-         // if (line.indexOf("#") != 0) {
          if (!line.startsWith("#")) {
             int firstSpace = line.indexOf(" ");
             int secondSpace = line.indexOf(" ", firstSpace + 1);
@@ -108,10 +104,10 @@ public class ValidateAccessionNumber implements Service {
     * Read the stored list of DOI prefixes for articles only
     *
     */
-   private static void loadDOIPrefix() throws IOException {
+   /* private static void loadDOIPrefix() throws IOException {
       // http://stackoverflow.com/questions/27360977/how-to-read-files-from-resources-folder-in-scala
       String doiPrefixFilename = prop.getProperty("doiblacklist");
-      URL pURL = ValidateAccessionNumber.class.getResource("/" + doiPrefixFilename);
+      URL pURL = AccessionNumberFilter.class.getResource("/" + doiPrefixFilename);
       BufferedReader reader = new BufferedReader(new InputStreamReader(pURL.openStream()));
 
       String line;
@@ -123,49 +119,48 @@ public class ValidateAccessionNumber implements Service {
          }
       }
       reader.close();
-   }
+   } */
 
    /**
     *
     */
-   private static String reEmbedContent(String taggedF, StringBuilder yytext, Map<String, String> map, int start) {
+   /* private static String reEmbedContent(String taggedF, StringBuilder yytext, Map<String, String> map, int start) {
       int contentBegins = yytext.indexOf(map.get(Xml.CONTENT), start);
       int contentLength = map.get(Xml.CONTENT).length();
-      String newelem = yytext.substring(start, contentBegins) + taggedF
+      return yytext.substring(start, contentBegins) + taggedF
               + yytext.substring(contentBegins + contentLength);
-      return newelem;
-   }
+   } */
 
    /**
     *
     */
    private static AbstractFaAction procBoundary = new AbstractFaAction() {
       public void invoke(StringBuilder yytext, int start, DfaRun runner) {
-         numOfAccInBoundary = new HashMap<>();
-         try {
-            Map <String, String> map = Xml.splitElement(yytext, start);
-            String content = map.get(Xml.CONTENT);
-            String newoutput;
+       numOfAccInBoundary = new HashMap<>();
+       try {
+          Map <String, String> map = Xml.splitElement(yytext, start);
+          String content = map.get(Xml.CONTENT);
+          String newoutput;
 
-            if ("TABLE".equals(map.get("type"))) {
-                DfaRun dfaRunEntity = new DfaRun(dfa_entity);
-                dfaRunEntity.clientData = map.get("type");
-                newoutput = dfaRunEntity.filter(content);
-            } else if ("SENT".equals(map.get(Xml.TAGNAME))) {
-                DfaRun dfaRunPlain = new DfaRun(dfa_plain);
-                dfaRunPlain.clientData = map.get(Xml.TAGNAME);
-                newoutput = dfaRunPlain.filter(content);
-            } else {
-                DfaRun dfaRunPlain = new DfaRun(dfa_plain);
-                dfaRunPlain.clientData = map.get("type");
-                newoutput = dfaRunPlain.filter(content);
-            }
+          if ("TABLE".equals(map.get("type"))) {
+              DfaRun dfaRunEntity = new DfaRun(dfa_entity);
+              dfaRunEntity.clientData = map.get("type");
+              newoutput = dfaRunEntity.filter(content);
+          } else if ("SENT".equals(map.get(Xml.TAGNAME))) {
+              DfaRun dfaRunPlain = new DfaRun(dfa_plain);
+              dfaRunPlain.clientData = map.get(Xml.TAGNAME);
+              newoutput = dfaRunPlain.filter(content);
+          } else {
+              DfaRun dfaRunPlain = new DfaRun(dfa_plain);
+              dfaRunPlain.clientData = map.get("type");
+              newoutput = dfaRunPlain.filter(content);
+          }
 
-            String embedContent = reEmbedContent(newoutput, yytext, map, start);
-            yytext.replace(start, yytext.length(), embedContent);
-         } catch (Exception e) {
-            LOGGER.log(Level.INFO, "context", e);
-         }
+          String embedContent = reEmbedContent(newoutput, yytext, map, start);
+          yytext.replace(start, yytext.length(), embedContent);
+       } catch (Exception e) {
+          LOGGER.log(Level.INFO, "context", e);
+       }
       }
    };
 
@@ -289,7 +284,7 @@ public class ValidateAccessionNumber implements Service {
      * @return
      */
    static boolean isIdValidInCache(String db, String id, String domain) {
-      id = normalizeID(db, id);
+      id = ar.normalizeID(db, id);
       boolean isValid = false;
       if (cachedValidations.containsKey(domain + id)) {
           String res = cachedValidations.get(domain + id);
@@ -303,11 +298,11 @@ public class ValidateAccessionNumber implements Service {
     * pdb and uniprot is case-insensitive, but ENA is upper-case
     */
    private static boolean isOnlineValid(String db, String id, String domain) {
-      id = normalizeID(db, id);
+      id = ar.normalizeID(db, id);
       if ("doi".equals(db)) {
-         return isDOIValid(id);
+         return dr.isDOIValid(id);
       } else {
-         return isAccValid(domain, id);
+         return ar.isAccValid(domain, id);
       }
    }
 
@@ -316,13 +311,13 @@ public class ValidateAccessionNumber implements Service {
      * @param doi
      * @return
      */
-   public static boolean isDOIValid(String doi) {
-      if (BlacklistDoiPrefix.containsKey(prefixDOI(doi))) {
+   /* public static boolean isDOIValid(String doi) {
+      if (BlacklistDoiPrefix.containsKey(dr.prefixDOI(doi))) {
          return false;
       } else if ("10.2210/".equals(doi.substring(0, 8))) { // exception rule for PDB data center
          return true;
       } else return dr.isValidID("doi", doi);
-   }
+   } */
 
     /**
      *
@@ -330,35 +325,35 @@ public class ValidateAccessionNumber implements Service {
      * @param accno
      * @return
      */
-   public static boolean isAccValid(String domain, String accno) {
+   /* public static boolean isAccValid(String domain, String accno) {
       return ar.isValidID(domain, accno);
-   }
+   } */
 
    /**
     * normalize accession numbers for cached and online validation
     */
-   static String normalizeID(String db, String id) {
+   /* static String normalizeID(String db, String id) {
        int dotIndex;
        dotIndex = id.indexOf(".");
        if (dotIndex != -1 && !"doi".equals(db)) id = id.substring(0, dotIndex);
        if (id.endsWith(")")) id = id.substring(0, id.length() - 1);
        return id.toUpperCase();
-   }
+   } */
 
    /**
     * return a prefix of a DOI
     */
-   public static String prefixDOI(String doi) {
+   /* static String prefixDOI(String doi) {
       String prefix = "";
       int bsIndex = doi.indexOf("/");
       if (bsIndex != -1) prefix = doi.substring(0, bsIndex);
       return prefix;
-   }
+   } */
 
    static {
       try {
          loadConfigurationFile();
-         loadDOIPrefix();
+         // loadDOIPrefix();
          loadPredefinedResults();
 
          Nfa bnfa = new Nfa(Nfa.NOTHING);
@@ -399,13 +394,13 @@ public class ValidateAccessionNumber implements Service {
       }
         
       if (stdpipe) {
-         ValidateAccessionNumber validator = new ValidateAccessionNumber(System.in, System.out);
+         AnnotationFilter validator = new AnnotationFilter(System.in, System.out);
          validator.run();
       } else {
-         LOGGER.info("ValidateAccessionNumber will listen on " + port + " .");
+         LOGGER.info("AnnotationFilter will listen on " + port + " .");
          try {      
             FilterServiceFactory fsf = new FilterServiceFactory(
-                    (in, out, params) -> new ValidateAccessionNumber(in, out));
+                    (in, out, params) -> new AnnotationFilter(in, out));
 
             TcpServer svr = new TcpServer(new ServerSocket(port), fsf, 50);
             svr.setLogging(System.out); 

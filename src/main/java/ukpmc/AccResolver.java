@@ -10,11 +10,13 @@ import java.net.URLConnection;
 
 import ukpmc.scala.IDResolver;
 
-public class AccResolver implements IDResolver {
+public class AccResolver extends Resolver implements IDResolver {
 
    // String query = "ebisearch/ws/rest/" + domain + "?query=" + "acc:\"" + accno + "\"%20OR%20id:\"" + accno + "\"";
    private final String HOST = "www.ebi.ac.uk";
    private final int PORT = -1;
+
+   public String prefixDOI(String s) { return ""; }
 
    private URL toURL(String doi) {
       try {
@@ -25,6 +27,15 @@ public class AccResolver implements IDResolver {
         throw new IllegalArgumentException();
       }
    }
+
+   public boolean isAccValid(String domain, String accno) {
+      return isValidID(domain, accno);
+   }
+
+    public boolean isDOIValid(String accno) {
+        return false;
+    }
+
 
    /* side effect? */
    public boolean isValidID(String domain, String accno) {

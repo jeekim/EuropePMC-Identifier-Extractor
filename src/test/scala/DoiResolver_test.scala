@@ -10,35 +10,38 @@ class DoiResolverSpec extends FlatSpec with Matchers {
   } */
 
   "isDOIValid" should "validate 10.5061/dryad.pk045dd as false" in {
-    ValidateAccessionNumber.isDOIValid("10.5061/dryad.pk045dd") should be (false)
+    new DoiResolver().isDOIValid("10.5061/dryad.pk045dd") should be (false)
   }
 
   "isAccValid" should "validate interpro, ipr018060 as true" in {
-    ValidateAccessionNumber.isAccValid("interpro", "ipr018060") should be (true)
+    new AccResolver().isAccValid("interpro", "ipr018060") should be (true)
+    // AccessionNumberFilter.isAccValid("interpro", "ipr018060") should be (true)
   }
 
   "isAccValid" should "validate interpro, ipr01806000 as false" in {
-    ValidateAccessionNumber.isAccValid("interpro", "ipr01806000") should be (false)
+    new AccResolver().isAccValid("interpro", "ipr01806000") should be (false)
+    // AccessionNumberFilter.isAccValid("interpro", "ipr01806000") should be (false)
   }
 
   "isCachedValid" should "validate pfam, PF00003 as true" in {
-    ValidateAccessionNumber.isIdValidInCache("pfam", "PF00003", "pfam") should be (true)
+    AnnotationFilter.isIdValidInCache("pfam", "PF00003", "pfam") should be (true)
   }
 
   "isCachedValid" should "validate pfam, pf00003333 as false" in {
-    ValidateAccessionNumber.isIdValidInCache("pfam", "pf00003333", "pfam") should be (false)
+    AnnotationFilter.isIdValidInCache("pfam", "pf00003333", "pfam") should be (false)
   }
 
   "normalizeID" should "normalizes 12345.3 to 12345" in {
-    ValidateAccessionNumber.normalizeID("pfam", "12345.3") should be ("12345")
+    new AccResolver().normalizeID("pfam", "12345.3") should be ("12345")
+    // AccessionNumberFilter.normalizeID("pfam", "12345.3") should be ("12345")
   }
 
-  "prefixDOI" should "prefixes 10.5061/dryad.pk045 to 10.5061" in {
-    ValidateAccessionNumber.prefixDOI("10.5061/dryad.pk045") should be ("10.5061")
-  }
+  /* "prefixDOI" should "prefixes 10.5061/dryad.pk045 to 10.5061" in {
+    AccessionNumberFilter.prefixDOI("10.5061/dryad.pk045") should be ("10.5061")
+  } */
 
   "dfa_boundary" should "validate ..." in {
-    val dfaRun = new DfaRun(ValidateAccessionNumber.dfa_boundary)
+    val dfaRun = new DfaRun(AnnotationFilter.dfa_boundary)
     dfaRun.filter(
       """<SENT sid="34" pm="."><plain>omim <z:acc db="omim" valmethod="onlineWithContext" domain="omim" context="(?i)(o*mim)" wsize="20" sec="">603878</z:acc></plain></SENT>""") should be (
       """<SENT sid="34" pm="."><plain>omim <z:acc db="omim" ids="603878">603878</z:acc></plain></SENT>""")
