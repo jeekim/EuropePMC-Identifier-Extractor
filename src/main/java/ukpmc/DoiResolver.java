@@ -70,8 +70,12 @@ public class DoiResolver extends Resolver implements Resolvable {
       }
    }
 
-   private void loadDOIPrefix() throws IOException {
+   private static void loadDOIPrefix() throws IOException {
       // http://stackoverflow.com/questions/27360977/how-to-read-files-from-resources-folder-in-scala
+      URL url = DoiResolver.class.getResource("/validate.properties");
+      if (url == null) throw new RuntimeException("can not find validate.properties!");
+      prop.load(url.openStream());
+
       String doiPrefixFilename = prop.getProperty("doiblacklist");
       URL pURL = DoiResolver.class.getResource("/" + doiPrefixFilename);
       BufferedReader reader = new BufferedReader(new InputStreamReader(pURL.openStream()));
@@ -85,5 +89,13 @@ public class DoiResolver extends Resolver implements Resolvable {
          }
       }
       reader.close();
+   }
+
+   static {
+      try {
+         loadDOIPrefix();
+      } catch (IOException e) {
+         e.printStackTrace();
+      }
    }
 }
