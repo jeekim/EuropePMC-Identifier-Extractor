@@ -300,9 +300,9 @@ public class AnnotationFilter implements Service {
    private static boolean isOnlineValid(String db, String id, String domain) {
       id = ar.normalizeID(db, id);
       if ("doi".equals(db)) {
-         return dr.isDOIValid(id);
+         return dr.isValid("doi", id);
       } else {
-         return ar.isAccValid(domain, id);
+         return ar.isValid(domain, id);
       }
    }
 

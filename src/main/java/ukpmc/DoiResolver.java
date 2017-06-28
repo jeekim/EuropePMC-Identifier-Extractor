@@ -10,9 +10,9 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.Properties;
 
-import ukpmc.scala.IDResolver;
+import ukpmc.scala.Resolvable;
 
-public class DoiResolver extends Resolver implements IDResolver {
+public class DoiResolver extends Resolver implements Resolvable {
    private final String HOST; // TODO make it more generic for any sites?
    private final int PORT;
    private static Properties prop = new Properties();
@@ -46,17 +46,17 @@ public class DoiResolver extends Resolver implements IDResolver {
       return prefix;
    }
 
-   public boolean isDOIValid(String doi) {
+   public boolean isValid(String sem_type, String doi) {
       if (BlacklistDoiPrefix.containsKey(prefixDOI(doi))) {
          return false;
       } else if ("10.2210/".equals(doi.substring(0, 8))) { // exception rule for PDB data center
          return true;
-      } else return isValidID("doi", doi);
+      } else return isDOIValid("doi", doi);
    }
 
-   public boolean isAccValid(String domain, String id) { return true; }
+   /* public boolean isAccValid(String domain, String id) { return true; } */
 
-   public boolean isValidID(String domain, String doi) {
+   public boolean isDOIValid(String domain, String doi) {
       try {
          URL url = toURL(doi);
          HttpURLConnection connection = (HttpURLConnection) url.openConnection();

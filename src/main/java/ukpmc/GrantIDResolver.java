@@ -1,10 +1,10 @@
 package ukpmc;
 
-import ukpmc.scala.IDResolver;
+import ukpmc.scala.Resolvable;
 
-public class GrantIDResolver implements IDResolver {
+public class GrantIDResolver implements Resolvable {
 
-   public boolean isValidID(String domain, String id) {
+   public boolean isValid(String domain, String id) {
       return false;
    }
 

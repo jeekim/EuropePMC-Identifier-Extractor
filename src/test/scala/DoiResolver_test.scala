@@ -10,7 +10,7 @@ class DoiResolverSpec extends FlatSpec with Matchers {
   } */
 
   "isDOIValid" should "validate 10.5061/dryad.pk045dd as false" in {
-    new DoiResolver().isDOIValid("10.5061/dryad.pk045dd") should be (false)
+    new DoiResolver().isValid("doi", "10.5061/dryad.pk045dd") should be (false)
   }
 
   "isAccValid" should "validate interpro, ipr018060 as true" in {
