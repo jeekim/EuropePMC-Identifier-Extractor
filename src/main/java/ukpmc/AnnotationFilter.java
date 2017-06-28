@@ -42,8 +42,8 @@ import static ukpmc.TaggerUtils.reEmbedContent;
 public class AnnotationFilter implements Service {
 
    private static final Logger LOGGER = Logger.getLogger(AnnotationFilter.class.getName());
-
    private static Properties prop = new Properties();
+
    private static Resolver dr = new DoiResolver();
    private static Resolver ar = new AccResolver();
 
@@ -51,10 +51,8 @@ public class AnnotationFilter implements Service {
    private static Dfa dfa_plain;
    private static Dfa dfa_entity;
    
-   private static Map<String, String> cachedValidations = new HashMap<>();
-   // private static Map<String, String> BlacklistDoiPrefix = new HashMap<>();
+   private static Map<String, String> cachedValidations = new HashMap<>(); // TODO to remove
    private static Map<String, Integer> numOfAccInBoundary = new HashMap<>();
-   // TODO: test
    private InputStream in;
    private OutputStream out;
 
@@ -99,37 +97,6 @@ public class AnnotationFilter implements Service {
       }
       reader.close();
    }
-   
-   /**
-    * Read the stored list of DOI prefixes for articles only
-    *
-    */
-   /* private static void loadDOIPrefix() throws IOException {
-      // http://stackoverflow.com/questions/27360977/how-to-read-files-from-resources-folder-in-scala
-      String doiPrefixFilename = prop.getProperty("doiblacklist");
-      URL pURL = AccessionNumberFilter.class.getResource("/" + doiPrefixFilename);
-      BufferedReader reader = new BufferedReader(new InputStreamReader(pURL.openStream()));
-
-      String line;
-      while ((line = reader.readLine()) != null) {
-         if (line.indexOf("#") != 0) {
-            int firstSpace = line.indexOf(" ");
-            String prefix = line.substring(0, firstSpace);
-            BlacklistDoiPrefix.put(prefix, "Y");
-         }
-      }
-      reader.close();
-   } */
-
-   /**
-    *
-    */
-   /* private static String reEmbedContent(String taggedF, StringBuilder yytext, Map<String, String> map, int start) {
-      int contentBegins = yytext.indexOf(map.get(Xml.CONTENT), start);
-      int contentLength = map.get(Xml.CONTENT).length();
-      return yytext.substring(start, contentBegins) + taggedF
-              + yytext.substring(contentBegins + contentLength);
-   } */
 
    /**
     *
@@ -306,54 +273,9 @@ public class AnnotationFilter implements Service {
       }
    }
 
-    /**
-     *
-     * @param doi
-     * @return
-     */
-   /* public static boolean isDOIValid(String doi) {
-      if (BlacklistDoiPrefix.containsKey(dr.prefixDOI(doi))) {
-         return false;
-      } else if ("10.2210/".equals(doi.substring(0, 8))) { // exception rule for PDB data center
-         return true;
-      } else return dr.isValidID("doi", doi);
-   } */
-
-    /**
-     *
-     * @param domain
-     * @param accno
-     * @return
-     */
-   /* public static boolean isAccValid(String domain, String accno) {
-      return ar.isValidID(domain, accno);
-   } */
-
-   /**
-    * normalize accession numbers for cached and online validation
-    */
-   /* static String normalizeID(String db, String id) {
-       int dotIndex;
-       dotIndex = id.indexOf(".");
-       if (dotIndex != -1 && !"doi".equals(db)) id = id.substring(0, dotIndex);
-       if (id.endsWith(")")) id = id.substring(0, id.length() - 1);
-       return id.toUpperCase();
-   } */
-
-   /**
-    * return a prefix of a DOI
-    */
-   /* static String prefixDOI(String doi) {
-      String prefix = "";
-      int bsIndex = doi.indexOf("/");
-      if (bsIndex != -1) prefix = doi.substring(0, bsIndex);
-      return prefix;
-   } */
-
    static {
       try {
          loadConfigurationFile();
-         // loadDOIPrefix();
          loadPredefinedResults();
 
          Nfa bnfa = new Nfa(Nfa.NOTHING);

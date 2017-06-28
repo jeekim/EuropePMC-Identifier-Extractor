@@ -16,7 +16,7 @@ public class AccResolver extends Resolver implements Resolvable {
    private final String HOST = "www.ebi.ac.uk";
    private final int PORT = -1;
 
-   public String prefixDOI(String s) { return ""; }
+   public String prefixDOI(String s) { return ""; } // TODO to remove
 
    private URL toURL(String doi) {
       try {
@@ -32,12 +32,6 @@ public class AccResolver extends Resolver implements Resolvable {
       return isAccValid(domain, accno);
    }
 
-   // public boolean isDOIValid(String accno) {
-   //      return false;
-   //  }
-
-
-   /* side effect? */
    public boolean isAccValid(String domain, String accno) {
      String query = "ebisearch/ws/rest/" + domain + "?query=" + "acc:\"" + accno + "\"%20OR%20id:\"" + accno + "\"";
      URL url = toURL(query);

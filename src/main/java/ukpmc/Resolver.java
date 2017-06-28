@@ -7,8 +7,6 @@ import ukpmc.scala.Resolvable;
  */
 public abstract class Resolver implements Resolvable {
     public abstract String prefixDOI(String s);
-    // public abstract boolean isAccValid (String domain, String id);
-    // public abstract boolean isDOIValid (String id);
 
     String normalizeID(String db, String id) {
         int dotIndex;

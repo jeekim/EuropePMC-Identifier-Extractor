@@ -17,7 +17,6 @@ public class DoiResolver extends Resolver implements Resolvable {
    private final int PORT;
    private static Properties prop = new Properties();
    private static Map<String, String> BlacklistDoiPrefix = new HashMap<>();
-
    // TODO https://api.datacite.org/works/10.5061/dryad.pk045
 
    public DoiResolver() {
@@ -53,8 +52,6 @@ public class DoiResolver extends Resolver implements Resolvable {
          return true;
       } else return isDOIValid("doi", doi);
    }
-
-   /* public boolean isAccValid(String domain, String id) { return true; } */
 
    public boolean isDOIValid(String domain, String doi) {
       try {
