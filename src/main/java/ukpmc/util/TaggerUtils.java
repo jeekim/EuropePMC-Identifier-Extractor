@@ -1,4 +1,4 @@
-package ukpmc;
+package ukpmc.util;
 
 import monq.jfa.Xml;
 import java.util.Map;

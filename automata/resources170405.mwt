@@ -1,5 +1,6 @@
 <mwt>
-  <template><z:resource db="%1" valmethod="%2" domain="%3" context="%4" wsize="%5" sec="%6">%0</z:resource></template>
+  <template><z:resource db="%1" valmethod="%2" domain="%3" context="%4" wsize="%5">%0</z:resource></template>
+  <!--template><z:resource db="%1" valmethod="%2" domain="%3" context="%4" wsize="%5" sec="%6">%0</z:resource></template-->
 
   <r p1="Runiprot" p2="noval" p3="" p4="" p5="">UniProt</r>
   <r p1="Runiprot" p2="noval" p3="" p4="" p5="">UniProtKB</r>

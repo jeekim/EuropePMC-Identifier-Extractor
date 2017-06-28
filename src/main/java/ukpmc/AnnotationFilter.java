@@ -37,7 +37,7 @@ import monq.net.TcpServer;
 
 import ukpmc.scala.MwtParser;
 import ukpmc.scala.MwtAtts;
-import static ukpmc.TaggerUtils.reEmbedContent;
+import static ukpmc.util.TaggerUtils.reEmbedContent;
 
 public class AnnotationFilter implements Service {
 
