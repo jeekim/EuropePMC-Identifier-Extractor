@@ -3,20 +3,19 @@ package ukpmc;
 import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-// import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-// import java.net.URLConnection;
 
 import ukpmc.scala.Resolvable;
 
 public class AccResolver extends Resolver implements Resolvable {
 
-   // String query = "ebisearch/ws/rest/" + domain + "?query=" + "acc:\"" + accno + "\"%20OR%20id:\"" + accno + "\"";
    private final String HOST = "www.ebi.ac.uk";
    private final int PORT = -1;
 
-   public String prefixDOI(String s) { return ""; } // TODO to remove
+   public boolean isValid(String domain, String accno) {
+       return isAccValid(domain, accno);
+   }
 
    private URL toURL(String doi) {
       try {
@@ -28,11 +27,7 @@ public class AccResolver extends Resolver implements Resolvable {
       }
    }
 
-   public boolean isValid(String domain, String accno) {
-      return isAccValid(domain, accno);
-   }
-
-   public boolean isAccValid(String domain, String accno) {
+   private boolean isAccValid(String domain, String accno) {
      String query = "ebisearch/ws/rest/" + domain + "?query=" + "acc:\"" + accno + "\"%20OR%20id:\"" + accno + "\"";
      URL url = toURL(query);
      try (BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()))) {

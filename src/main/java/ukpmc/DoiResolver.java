@@ -1,48 +1,27 @@
 package ukpmc;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Properties;
+import java.net.MalformedURLException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 import ukpmc.scala.Resolvable;
 
 public class DoiResolver extends Resolver implements Resolvable {
-   private final String HOST; // TODO make it more generic for any sites?
+   private final String HOST;
    private final int PORT;
    private static Properties prop = new Properties();
    private static Map<String, String> BlacklistDoiPrefix = new HashMap<>();
-   // TODO https://api.datacite.org/works/10.5061/dryad.pk045
 
    public DoiResolver() {
-      HOST = "data.datacite.org";
+      HOST = "api.datacite.org";
+      // example: https://api.datacite.org/works/10.5061/dryad.pk045
       PORT = -1;
-   }
-
-   private URL toURL(String doi) {
-      try {
-        String path;
-        path = '/' + doi.replaceAll("#", "%23").replaceAll("\\[", "%5B") .replaceAll("\\]", "%5D");
-        URL url = new URL("https", HOST, PORT, path);
-        return url;
-      } catch (MalformedURLException e) {
-        throw new IllegalArgumentException();
-      }
-   }
-
-   /**
-    * return a prefix of a DOI
-    */
-   public String prefixDOI(String doi) {
-      String prefix = "";
-      int bsIndex = doi.indexOf("/");
-      if (bsIndex != -1) prefix = doi.substring(0, bsIndex);
-      return prefix;
    }
 
    public boolean isValid(String sem_type, String doi) {
@@ -53,7 +32,28 @@ public class DoiResolver extends Resolver implements Resolvable {
       } else return isDOIValid("doi", doi);
    }
 
-   public boolean isDOIValid(String domain, String doi) {
+   private URL toURL(String doi) {
+      try {
+        String path;
+        path = "/works/" + doi.replaceAll("#", "%23").replaceAll("\\[", "%5B") .replaceAll("\\]", "%5D");
+        URL url = new URL("https", HOST, PORT, path);
+        return url;
+      } catch (MalformedURLException e) {
+        throw new IllegalArgumentException();
+      }
+   }
+
+   /**
+    * return a prefix of a DOI
+    */
+   String prefixDOI(String doi) {
+      String prefix = "";
+      int bsIndex = doi.indexOf("/");
+      if (bsIndex != -1) prefix = doi.substring(0, bsIndex);
+      return prefix;
+   }
+
+   private boolean isDOIValid(String domain, String doi) {
       try {
          URL url = toURL(doi);
          HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -68,7 +68,6 @@ public class DoiResolver extends Resolver implements Resolvable {
    }
 
    private static void loadDOIPrefix() throws IOException {
-      // http://stackoverflow.com/questions/27360977/how-to-read-files-from-resources-folder-in-scala
       URL url = DoiResolver.class.getResource("/validate.properties");
       if (url == null) throw new RuntimeException("can not find validate.properties!");
       prop.load(url.openStream());

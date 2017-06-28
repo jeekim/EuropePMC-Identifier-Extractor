@@ -6,8 +6,6 @@ import ukpmc.scala.Resolvable;
  * Created by jee on 27/06/17.
  */
 public abstract class Resolver implements Resolvable {
-    public abstract String prefixDOI(String s);
-
     String normalizeID(String db, String id) {
         int dotIndex;
         dotIndex = id.indexOf(".");

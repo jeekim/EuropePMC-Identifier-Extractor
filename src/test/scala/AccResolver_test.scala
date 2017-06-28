@@ -1,12 +1,11 @@
 package ukpmc
 
-// import ukpmc._
 import org.specs2._
 
 /**
    * This specification shows how to create examples using the "acceptance" style
     */
-class HelloWorldSpec extends Specification {
+class AccResolverSpec extends Specification {
   def is = s2"""
   This is a specification to check the '10.5061/dryad.pk045' string
 
