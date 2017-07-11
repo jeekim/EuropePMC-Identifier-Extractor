@@ -12,7 +12,7 @@ scalacOptions in (Compile,doc) := Seq("-groups", "-implicits")
 scalacOptions in Test ++= Seq("-Yrangepos")
 
 name := "AnnotationFilter"
-version := "0.2"
+version := "v1.1"
 
 lazy val testERC = taskKey[Unit]("Prints 'ERC test results'")
 testERC := {
