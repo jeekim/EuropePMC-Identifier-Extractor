@@ -1,5 +1,5 @@
-/* import AssemblyKeys._
-import sbt.complete.DefaultParsers._*/
+import AssemblyKeys._
+// import sbt.complete.DefaultParsers._
 
 assemblySettings
 
@@ -10,6 +10,9 @@ libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.12.5" % "test"
 
 scalacOptions in (Compile,doc) := Seq("-groups", "-implicits")
 scalacOptions in Test ++= Seq("-Yrangepos")
+
+name := "AnnotationFilter"
+version := "0.2"
 
 lazy val testERC = taskKey[Unit]("Prints 'ERC test results'")
 testERC := {
@@ -88,4 +91,15 @@ generateMP := {
 		"arq --data=/tmp/xxxyyyzzz.ttl --query=sparql/mp.rq --results=TSV" #|
 		"bin/mp.rb 2" #>
 		file("automata/mp.mwt") !
+}
+
+val deploy = TaskKey[Unit]("deploy", "Copies assembly jar to remote location")
+
+deploy <<= assembly map { (asm) =>
+  val account = sys.env.get("ACCOUNT").getOrElse("")
+	val dpath = sys.env.get("DPATH").getOrElse("")
+	val local = asm.getPath
+	val remote = account + ":" + dpath + asm.getName
+	println(s"Copying: $local -> $account:$remote")
+	Seq("scp", local, remote) !!
 }

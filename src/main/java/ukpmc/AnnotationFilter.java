@@ -109,11 +109,11 @@ public class AnnotationFilter implements Service {
           String content = map.get(Xml.CONTENT);
           String newoutput;
 
-          if ("TABLE".equals(map.get("type"))) {
+          /* if ("TABLE".equals(map.get("type"))) {
               DfaRun dfaRunEntity = new DfaRun(dfa_entity);
               dfaRunEntity.clientData = map.get("type");
               newoutput = dfaRunEntity.filter(content);
-          } else if ("SENT".equals(map.get(Xml.TAGNAME))) {
+          } else */ if ("SENT".equals(map.get(Xml.TAGNAME))) {
               DfaRun dfaRunPlain = new DfaRun(dfa_plain);
               dfaRunPlain.clientData = map.get(Xml.TAGNAME);
               newoutput = dfaRunPlain.filter(content);
@@ -279,7 +279,7 @@ public class AnnotationFilter implements Service {
          loadPredefinedResults();
 
          Nfa bnfa = new Nfa(Nfa.NOTHING);
-         bnfa.or(Xml.GoofedElement("SecTag"), procBoundary)
+         bnfa // .or(Xml.GoofedElement("SecTag"), procBoundary)
          .or(Xml.GoofedElement("SENT"), procBoundary);
          dfa_boundary = bnfa.compile(DfaRun.UNMATCHED_COPY);
 
