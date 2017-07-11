@@ -103,3 +103,4 @@ deploy <<= assembly map { (asm) =>
 	println(s"Copying: $local -> $account:$remote")
 	Seq("scp", local, remote) !!
 }
+
