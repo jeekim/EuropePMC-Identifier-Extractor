@@ -14,25 +14,38 @@ scalacOptions in Test ++= Seq("-Yrangepos")
 name := "AnnotationFilter"
 version := "v1.1"
 
+lazy val testPMC = taskKey[Unit]("Prints 'PMC test results'")
+testPMC := {
+  "cat corpora/PMC4969258_PMC4986126.xml" #|
+  "java -XX:+UseSerialGC -cp lib/monq-1.7.1.jar:lib/pmcxslpipe.jar ebi.ukpmc.xslpipe.Pipeline -stdpipe -stageSpotText" #|
+  "java -XX:+UseSerialGC -cp lib/monq-1.7.1.jar:lib/pmcxslpipe.jar ebi.ukpmc.xslpipe.Pipeline -stdpipe -outerText" #|
+  "java -XX:+UseSerialGC -cp lib/Sentenciser.jar ebi.ukpmc.sentenciser.Sentencise -rs '<article[^>]+>' -ok -ie UTF-8 -oe UTF-8" #|
+  "java -cp lib/monq-1.7.1.jar monq.programs.DictFilter -t elem -e plain -ie UTF-8 -oe UTF-8 automata/acc170508.mwt" #|
+  "java -cp lib/monq-1.7.1.jar monq.programs.DictFilter -t elem -e plain -ie UTF-8 -oe UTF-8 automata/resources170405.mwt" #|
+  "java -cp target/scala-2.10/AnnotationFilter-assembly-v1.1.jar ukpmc.AnnotationFilter -stdpipe" #| // #> file("corpora/PMC4969258_PMC4986126.ann") !
+  "java -cp lib/monq-1.7.1.jar monq.programs.Grep -r '<z:acc[^>]+>' '</z:acc>' -cr -co -rf '%0<xtext>' '</xtext>%0'" #> file("corpora/PMC4969258_PMC4986126.ann") !
+}
+
+
 lazy val testERC = taskKey[Unit]("Prints 'ERC test results'")
 testERC := {
   "cat test/ercfunds.txt" #|
 	"java -cp lib/monq-1.7.1.jar monq.programs.DictFilter -t elem -e plain -ie UTF-8 -oe UTF-8 automata/grants150714.mwt" #|
-	"java -cp target/scala-2.10/europepmc-identifier-extractor-assembly-0.1-SNAPSHOT.jar ukpmc.AnnotationFilter -stdpipe" !
+	"java -cp target/scala-2.10/AnnotationFilter-assembly-v1.1.jar ukpmc.AnnotationFilter -stdpipe" !
 }
 
 lazy val testAcc = taskKey[Unit]("Prints 'Acc test results'")
 testAcc := {
   "cat test/accnums.txt" #|
 	"java -cp lib/monq-1.7.1.jar monq.programs.DictFilter -t elem -e plain -ie UTF-8 -oe UTF-8 automata/acc150612.mwt" #|
-	"java -cp target/scala-2.10/europepmc-identifier-extractor-assembly-0.1-SNAPSHOT.jar ukpmc.AnnotationFilter -stdpipe" !
+	"java -cp target/scala-2.10/AnnotationFilter-assembly-v1.1.jar ukpmc.AnnotationFilter -stdpipe" !
 }
 
 lazy val testResource = taskKey[Unit]("Prints 'Resource test results'")
 testResource := {
 	"cat test/accnums.txt" #|
 	"java -cp lib/monq-1.7.1.jar monq.programs.DictFilter -t elem -e plain -ie UTF-8 -oe UTF-8 automata/resources170405.mwt" #|
-	"java -cp target/scala-2.10/europepmc-identifier-extractor-assembly-0.1-SNAPSHOT.jar ukpmc.AnnotationFilter -stdpipe" !
+	"java -cp target/scala-2.10/AnnotationFilter-assembly-v1.1.jar ukpmc.AnnotationFilter -stdpipe" !
 }
 
 

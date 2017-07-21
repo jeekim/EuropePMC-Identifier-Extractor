@@ -306,7 +306,8 @@ public class AnnotationFilter implements Service {
             j = 1;
          }
       } catch (java.lang.NumberFormatException ne) {
-         LOGGER.info(arg[0]);
+         ;
+         // LOGGER.info(arg[0]);
       }
 
       for (int i = j; i < arg.length; i++) {
@@ -319,7 +320,7 @@ public class AnnotationFilter implements Service {
          AnnotationFilter validator = new AnnotationFilter(System.in, System.out);
          validator.run();
       } else {
-         LOGGER.info("AnnotationFilter will listen on " + port + " .");
+         // LOGGER.info("AnnotationFilter will listen on " + port + " .");
          try {      
             FilterServiceFactory fsf = new FilterServiceFactory(
                     (in, out, params) -> new AnnotationFilter(in, out));

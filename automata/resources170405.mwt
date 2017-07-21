@@ -1,22 +1,21 @@
 <mwt>
-  <template><z:resource db="%1" valmethod="%2" domain="%3" context="%4" wsize="%5">%0</z:resource></template>
-  <!--template><z:resource db="%1" valmethod="%2" domain="%3" context="%4" wsize="%5" sec="%6">%0</z:resource></template-->
+  <template><z:acc db="%1" valmethod="%2" domain="%3" context="%4" wsize="%5">%0</z:acc></template>
 
   <r p1="Runiprot" p2="noval" p3="" p4="" p5="">UniProt</r>
   <r p1="Runiprot" p2="noval" p3="" p4="" p5="">UniProtKB</r>
   <r p1="Runiprot" p2="noval" p3="" p4="" p5="">Swiss[ \-]*[Pp]rot</r>
 
-  <r p1="Rpride" p2="noval" p3="" p4="" p5="0">PRIDE</r>
-  <r p1="Rpride" p2="noval" p3="" p4="" p5="0">PRoteomics IDEntifications database</r>
+  <r p1="Rpride" p2="noval" p3="" p4="" p5="">PRIDE</r>
+  <r p1="Rpride" p2="noval" p3="" p4="" p5="">PRoteomics IDEntifications database</r>
 
   <r p1="Rpdb" p2="contextOnly" p3="" p4="(?i)(protein|data|bank)" p5="5000">PDB</r>
-  <r p1="Rpdb" p2="noval" p3="" p4="" p5="0">Protein Databank</r>
-  <r p1="Rpdb" p2="noval" p3="" p4="" p5="0">Protein DataBank</r>
-  <r p1="Rpdb" p2="noval" p3="" p4="" p5="0">Protein Data Bank</r>
-  <r p1="Rpdb" p2="noval" p3="" p4="" p5="0">PDBe</r>
-  <r p1="Rpdb" p2="noval" p3="" p4="" p5="0">Protein Databank in Europe</r>
-  <r p1="Rpdb" p2="noval" p3="" p4="" p5="0">Protein DataBank in Europe</r>
-  <r p1="Rpdb" p2="noval" p3="" p4="" p5="0">Protein Data Bank in Europe</r>
+  <r p1="Rpdb" p2="noval" p3="" p4="" p5="">Protein Databank</r>
+  <r p1="Rpdb" p2="noval" p3="" p4="" p5="">Protein DataBank</r>
+  <r p1="Rpdb" p2="noval" p3="" p4="" p5="">Protein Data Bank</r>
+  <r p1="Rpdb" p2="noval" p3="" p4="" p5="">PDBe</r>
+  <r p1="Rpdb" p2="noval" p3="" p4="" p5="">Protein Databank in Europe</r>
+  <r p1="Rpdb" p2="noval" p3="" p4="" p5="">Protein DataBank in Europe</r>
+  <r p1="Rpdb" p2="noval" p3="" p4="" p5="">Protein Data Bank in Europe</r>
 
   <r p1="Rena" p2="contextOnly" p3="" p4="(?i)(nucleotide|archive)" p5="5000">ENA</r>
   <!--r p1="Rena" p2="contextOnly" p3="" p4="(?i)(european|nucleotide|archive)" p5="5000">ENA</r-->
@@ -34,7 +33,7 @@
   <r p1="Rpfam" p2="noval" p3="" p4="" p5="">Pfam</r>
   <r p1="Rpfam" p2="noval" p3="" p4="" p5="">Protein Family Database</r>
 
-  <!--r p1="Rarrayexpress" p2="noval" p3="" p4="" p5="">ArrayExpress</r>
+  <r p1="Rarrayexpress" p2="noval" p3="" p4="" p5="">ArrayExpress</r>
   <r p1="Rarrayexpress" p2="noval" p3="" p4="" p5="">Array Express</r>
 
   <r p1="Rbiomodels" p2="noval" p3="" p4="" p5="">BioModels</r>
@@ -66,7 +65,7 @@
 
   <r p1="Rintact" p2="noval" p3="" p4="" p5="">IntAct</r>
 
-  <r p1="Rmetabolights" p2="noval" p3="" p4="" p5="">MetaboLights</r-->
+  <r p1="Rmetabolights" p2="noval" p3="" p4="" p5="">MetaboLights</r>
 
   <template>%0</template>
     <r><z:[^>]*>(.*</z)!:[^>]*></r>
