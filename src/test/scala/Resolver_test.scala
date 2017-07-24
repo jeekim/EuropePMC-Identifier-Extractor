@@ -16,6 +16,22 @@ class ResolverSpec extends FlatSpec with Matchers {
     new DoiResolver().isValid("doi", "10.1016/dryad.pk045") should be (false)
   }
 
+  "isValid" should "validate refseq, NC_002014 as true" in {
+    new NcbiResolver().isValid("nucleotide", "NC_002014") should be (true)
+  }
+
+  "isValid" should "validate refseq, NC_0020030 as false" in {
+    new NcbiResolver().isValid("nucleotide", "NC_0020030") should be (false)
+  }
+
+  "isValid" should "validate refsnp, rs6725887 as true" in {
+    new NcbiResolver().isValid("snp", "rs6725887") should be (true)
+  }
+
+  "isValid" should "validate refsnp, rs67258873333 as false" in {
+    new NcbiResolver().isValid("snp", "rs67258873333") should be (false)
+  }
+
   "isValid" should "validate interpro, ipr018060 as true" in {
     new AccResolver().isValid("interpro", "ipr018060") should be (true)
   }
