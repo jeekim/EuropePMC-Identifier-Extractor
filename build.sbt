@@ -1,7 +1,7 @@
-import AssemblyKeys._
+// import AssemblyKeys._
 // import sbt.complete.DefaultParsers._
 
-assemblySettings
+// assemblySettings
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.4" % "test"
 libraryDependencies += "org.specs2" %% "specs2-core" % "3.6.6" % "test"
@@ -113,6 +113,7 @@ deploy <<= assembly map { (asm) =>
 	val dpath = sys.env.get("DPATH").getOrElse("")
 	val local = asm.getPath
 	val remote = account + ":" + dpath + asm.getName
-	println(s"Copying: $local -> $account:$remote")
-	Seq("scp", local, remote) !!
+	println(s"Copying: $local -> $remote")
+	// Seq("scp", remote, remote + "prev") #&&
+	Seq("scp", local, remote) !
 }

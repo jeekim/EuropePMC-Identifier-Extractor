@@ -33,10 +33,12 @@
   <!--r p1="pfam" p2="cachedWithContext" p3="pfam" p4="(?i)(pfam)" p5="20000">PF(AM)?[0-9][0-9][0-9][0-9][0-9]</r-->
 
   <!-- refseq -->
-  <r p1="refseq" p2="contextOnly" p3="" p4="(?i)(refseq|genbank)" p5="20000">(AC|AP|NC|NG|NM|NP|NR|NT|NW|NZ|XM|XP|XR|YP|ZP|NS)_([A-Z][A-Z][A-Z][A-Z])*[0-9][0-9][0-9][0-9][0-9][0-9][0-9]?[0-9]?[0-9]?([.][0-9]+)?</r>
+  <r p1="refseq" p2="onlineWithContext" p3="" p4="(?i)(refseq|genbank)" p5="20000">(AC|AP|NC|NG|NM|NP|NR|NT|NW|NZ|XM|XP|XR|YP|ZP|NS)_([A-Z][A-Z][A-Z][A-Z])*[0-9][0-9][0-9][0-9][0-9][0-9][0-9]?[0-9]?[0-9]?([.][0-9]+)?</r>
+  <!--r p1="refseq" p2="contextOnly" p3="" p4="(?i)(refseq|genbank)" p5="20000">(AC|AP|NC|NG|NM|NP|NR|NT|NW|NZ|XM|XP|XR|YP|ZP|NS)_([A-Z][A-Z][A-Z][A-Z])*[0-9][0-9][0-9][0-9][0-9][0-9][0-9]?[0-9]?[0-9]?([.][0-9]+)?</r-->
 
   <!-- refsnp -->
-  <r p1="refsnp" p2="contextOnly" p3="" p4="(?i)(snps*)" p5="20000">rs[0-9][0-9][0-9][0-9][0-9][0-9]?[0-9]?[0-9]?[0-9]?</r>
+  <r p1="refsnp" p2="onlineWithContext" p3="" p4="(?i)(snps*)" p5="20000">rs[0-9][0-9][0-9][0-9][0-9][0-9]?[0-9]?[0-9]?[0-9]?</r>
+  <!--r p1="refsnp" p2="contextOnly" p3="" p4="(?i)(snps*)" p5="20000">rs[0-9][0-9][0-9][0-9][0-9][0-9]?[0-9]?[0-9]?[0-9]?</r-->
 
   <!-- doi -->
   <r p1="doi" p2="onlineWithContext" p3="doi" p4="(?i)(doi)" p5="20000">10\.[0-9][0-9][0-9][0-9]+/[^ ()\"<>]+</r>
