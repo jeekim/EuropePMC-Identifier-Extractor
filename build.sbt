@@ -1,5 +1,5 @@
 // import AssemblyKeys._
-// import sbt.complete.DefaultParsers._
+import sbt.complete.DefaultParsers._
 
 // assemblySettings
 
@@ -106,8 +106,7 @@ generateMP := {
 		file("automata/mp.mwt") !
 }
 
-val deploy = TaskKey[Unit]("deploy", "Copies assembly jar to remote location")
-
+lazy val deploy = TaskKey[Unit]("deploy", "Copies assembly jar to remote location")
 deploy <<= assembly map { (asm) =>
   val account = sys.env.get("ACCOUNT").getOrElse("")
 	val dpath = sys.env.get("DPATH").getOrElse("")
@@ -116,4 +115,18 @@ deploy <<= assembly map { (asm) =>
 	println(s"Copying: $local -> $remote")
 	// Seq("scp", remote, remote + "prev") #&&
 	Seq("scp", local, remote) !
+}
+
+// annotate (usage: program ext from to mode date test_date)
+lazy val annotate = inputKey[Unit]("Annotation task.")
+annotate := {
+	val args: Seq[String] = spaceDelimited("<arg>").parsed
+	// val Seq(ext, from, to, mode, date, test_date) = args
+	val Seq(date, test_date) = args
+	val account = ""
+	val wd = "/nfs/research2/textmining/jeehyub/pmc/"
+	val toDir = wd + date + "/xml/annotation" + test_date
+	val to = "annotation" + test_date
+	val run = toDir + "/run.sh"
+	s"ssh $account cd ~; rm -rf $toDir; mkdir $toDir; run_pipeline xml source $to annotation $date $test_date | head -1 | sh" !
 }
