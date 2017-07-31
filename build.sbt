@@ -11,8 +11,11 @@ libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.12.5" % "test"
 scalacOptions in (Compile,doc) := Seq("-groups", "-implicits")
 scalacOptions in Test ++= Seq("-Yrangepos")
 
-name := "AnnotationFilter"
-version := "v1.1"
+lazy val root = (project in file("."))
+  .settings(
+    name := "AnnotationFilter",
+    version := "v1.1"
+  )
 
 lazy val testPMC = taskKey[Unit]("Prints 'PMC test results'")
 testPMC := {
@@ -20,8 +23,8 @@ testPMC := {
   "java -XX:+UseSerialGC -cp lib/monq-1.7.1.jar:lib/pmcxslpipe.jar ebi.ukpmc.xslpipe.Pipeline -stdpipe -stageSpotText" #|
   "java -XX:+UseSerialGC -cp lib/monq-1.7.1.jar:lib/pmcxslpipe.jar ebi.ukpmc.xslpipe.Pipeline -stdpipe -outerText" #|
   "java -XX:+UseSerialGC -cp lib/Sentenciser.jar ebi.ukpmc.sentenciser.Sentencise -rs '<article[^>]+>' -ok -ie UTF-8 -oe UTF-8" #|
-  "java -cp lib/monq-1.7.1.jar monq.programs.DictFilter -t elem -e plain -ie UTF-8 -oe UTF-8 automata/acc170508.mwt" #|
-  "java -cp lib/monq-1.7.1.jar monq.programs.DictFilter -t elem -e plain -ie UTF-8 -oe UTF-8 automata/resources170405.mwt" #|
+  "java -cp lib/monq-1.7.1.jar monq.programs.DictFilter -t elem -e plain -ie UTF-8 -oe UTF-8 automata/acc170731.mwt" #|
+  "java -cp lib/monq-1.7.1.jar monq.programs.DictFilter -t elem -e plain -ie UTF-8 -oe UTF-8 automata/resources170731.mwt" #|
   "java -cp target/scala-2.10/AnnotationFilter-assembly-v1.1.jar ukpmc.AnnotationFilter -stdpipe" #| // #> file("corpora/PMC4969258_PMC4986126.ann") !
   "java -cp lib/monq-1.7.1.jar monq.programs.Grep -r '<z:acc[^>]+>' '</z:acc>' -cr -co -rf '%0<xtext>' '</xtext>%0'" #> file("corpora/PMC4969258_PMC4986126.ann") !
 }
@@ -106,27 +109,27 @@ generateMP := {
 		file("automata/mp.mwt") !
 }
 
-lazy val deploy = TaskKey[Unit]("deploy", "Copies assembly jar to remote location")
-deploy <<= assembly map { (asm) =>
+lazy val deploy = taskKey[Unit]("Copies assembly jar to remote location")
+deploy := {
   val account = sys.env.get("ACCOUNT").getOrElse("")
 	val dpath = sys.env.get("DPATH").getOrElse("")
-	val local = asm.getPath
-	val remote = account + ":" + dpath + asm.getName
+	val local = assembly.value.getPath
+	val remote = account + ":" + dpath + assembly.value.getName
 	println(s"Copying: $local -> $remote")
-	// Seq("scp", remote, remote + "prev") #&&
 	Seq("scp", local, remote) !
 }
 
 // annotate (usage: program ext from to mode date test_date)
 lazy val annotate = inputKey[Unit]("Annotation task.")
 annotate := {
+	val account = sys.env.get("ACCOUNT").getOrElse("")
 	val args: Seq[String] = spaceDelimited("<arg>").parsed
-	// val Seq(ext, from, to, mode, date, test_date) = args
 	val Seq(date, test_date) = args
-	val account = ""
 	val wd = "/nfs/research2/textmining/jeehyub/pmc/"
 	val toDir = wd + date + "/xml/annotation" + test_date
 	val to = "annotation" + test_date
 	val run = toDir + "/run.sh"
-	s"ssh $account cd ~; rm -rf $toDir; mkdir $toDir; run_pipeline xml source $to annotation $date $test_date | head -1 | sh" !
+	s"ssh $account cd ~; rm -rf $toDir; mkdir $toDir; run_pipeline xml 170725sec $to annotation $date $test_date > $run" !
+	// s"ssh $account cd ~; rm -rf $toDir; mkdir $toDir; run_pipeline xml 170725sec $to annotation $date $test_date | head -1 | sh" !
+	// s"ssh $account cd ~; rm -rf $toDir; mkdir $toDir; run_pipeline xml source $to annotation $date $test_date | head -1 | sh" !
 }
