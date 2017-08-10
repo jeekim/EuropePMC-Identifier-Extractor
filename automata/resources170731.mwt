@@ -16,24 +16,27 @@
   <r p1="Rchebi" p2="noval" p3="" p4="" p5="">Chemical Entities of Biological Interest</r>
 
   <r p1="Rchembl" p2="noval" p3="" p4="" p5="">ChEMBL</r>
+  <r p1="Rchembl" p2="noval" p3="" p4="" p5="">UniChem</r>
 
   <!-- complex portal -->
   <r p1="Rcomplexportal" p2="noval" p3="" p4="" p5="">Complex Portal</r>
 
   <!-- ebi metagenomics -->
-  <r p1="Rmetagenomics" p2="noval" p3="" p4="" p5="">EBI Metagenomics"></r>
+  <r p1="Rmetagenomics" p2="noval" p3="" p4="" p5="">EBI Metagenomics</r>
 
   <!-- efo -->
-  <r p1="Refo" p2="noval" p3="" p4="" p5="">Experimental Factor Ontology"></r>
+  <r p1="Refo" p2="noval" p3="" p4="" p5="">Experimental Factor Ontology</r>
 
   <r p1="Rega" p2="contextOnly" p3="" p4="(?i)(european|genome|phenome|archive)" p5="5000">EGA</r>
   <r p1="Rega" p2="noval" p3="" p4="" p5="">European Genome\-phenome Archive</r>
 
   <!-- emdb -->
   <r p1="Remdb" p2="noval" p3="" p4="" p5="">Electron Microscopy Data Bank</r>
+  <r p1="Remdb" p2="noval" p3="" p4="" p5="">EMDataBank</r>
 
   <!-- empiar -->
   <r p1="Rempiar" p2="noval" p3="" p4="" p5="">Electron Microscopy Public Image Archive</r>
+  <r p1="Rempiar" p2="contextOnly" p3="" p4="(?i)(image|deposit)" p5="5000">EMPIAR</r>
 
   <r p1="Rena" p2="contextOnly" p3="" p4="(?i)(nucleotide|archive)" p5="5000">ENA</r>
   <!--r p1="Rena" p2="contextOnly" p3="" p4="(?i)(european|nucleotide|archive)" p5="5000">ENA</r-->
@@ -126,8 +129,8 @@
   <!-- sure chembl -->
   <r p1="Rsurechembl" p2="noval" p3="" p4="" p5="">SureChEMBL</r>
 
-  <!-- unichem -->
-  <r p1="Runichem" p2="noval" p3="" p4="" p5="">UniChem</r>
+  <!-- unichem merged with ChEMBL -->
+  <!--r p1="Runichem" p2="noval" p3="" p4="" p5="">UniChem</r-->
 
   <r p1="Runiprot" p2="noval" p3="" p4="" p5="">UniProt</r>
   <r p1="Runiprot" p2="noval" p3="" p4="" p5="">UniProtKB</r>

@@ -28,6 +28,7 @@ testPMC := {
   "java -cp target/scala-2.10/AnnotationFilter-assembly-v1.1.jar ukpmc.AnnotationFilter -stdpipe" #| // #> file("corpora/PMC4969258_PMC4986126.ann") !
   "java -cp lib/monq-1.7.1.jar monq.programs.Grep -r '<z:acc[^>]+>' '</z:acc>' -cr -co -rf '%0<xtext>' '</xtext>%0'" #> file("corpora/PMC4969258_PMC4986126.ann") !
 }
+// "java -cp target/scala-2.10/AnnotationFilter-assembly-v1.1.jar ukpmc.Pipeline -xml2summary" #> file("corpora/PMC4969258_PMC4986126.ann") !
 
 
 lazy val testERC = taskKey[Unit]("Prints 'ERC test results'")

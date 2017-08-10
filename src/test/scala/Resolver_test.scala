@@ -40,6 +40,14 @@ class ResolverSpec extends FlatSpec with Matchers {
     new AccResolver().isValid("interpro", "ipr01806000") should be (false)
   }
 
+  "isValid" should "validate R-HSA-3108232 as true" in {
+    new AccResolver().isValid("reactome", "R-HSA-3108232") should be (true)
+  }
+
+  "isValid" should "validate as EFO:0000647 true" in {
+    new AccResolver().isValid("efo", "EFO:0000647 ") should be (true)
+  }
+
   "isCachedValid" should "validate pfam, PF00003 as true" in {
     AnnotationFilter.isIdValidInCache("pfam", "PF00003", "pfam") should be (true)
   }

@@ -5,6 +5,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 import ukpmc.scala.Resolvable;
 
@@ -28,6 +30,13 @@ public class AccResolver extends Resolver implements Resolvable {
    }
 
    private boolean isAccValid(String domain, String accno) {
+     if ("efo".equals(domain)) {
+        accno = extractNumbers(accno);
+         // System.err.println(accno);
+     } else if ("reactome".equals(domain)) {
+         accno = extractNumbers(accno);
+     }
+     // String query = "ebisearch/ws/rest/" + domain + "?query=" + accno;
      String query = "ebisearch/ws/rest/" + domain + "?query=" + "acc:\"" + accno + "\"%20OR%20id:\"" + accno + "\"";
      URL url = toURL(query);
      try (BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()))) {
@@ -40,5 +49,14 @@ public class AccResolver extends Resolver implements Resolvable {
          System.err.println(e);
      }
      return true;
+   }
+
+   private String extractNumbers(String accno) {
+       Pattern p = Pattern.compile("\\d+");
+       Matcher m = p.matcher(accno);
+       if (m.find()) {
+           return m.group();
+       }
+       return accno;
    }
 }

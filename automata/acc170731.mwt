@@ -26,6 +26,7 @@
 
   <!-- N efo -->
   <r p1="efo" p2="onlineWithContext" p3="efo" p4="" p5="20000">EFO_[0-9]+</r>
+  <r p1="efo" p2="onlineWithContext" p3="efo" p4="" p5="20000">EFO:[0-9]+</r>
 
 
   <!-- ega -->
@@ -35,6 +36,7 @@
   <r p1="emdb" p2="onlineWithContext" p3="emdb" p4="(?i)(emdb|accession|code)" p5="20000">EMD\-[0-9][0-9][0-9][0-9]</r>
 
   <!-- N empiar -->
+  <r p1="empiar" p2="contextOnly" p3="" p4="(?i)(accession|code)" p5="20000">EMPIAR\-[0-9][0-9][0-9][0-9][0-9]</r>
 
 
   <!-- gen -->

@@ -265,7 +265,7 @@ public class AnnotationFilter implements Service {
     *
     * pdb and uniprot is case-insensitive, but ENA is upper-case
     */
-   // TODO test this method.
+   // TODO test this method. is it the right place?
    private static boolean isOnlineValid(String db, String id, String domain) {
       id = ar.normalizeID(db, id);
       if ("doi".equals(db)) {
