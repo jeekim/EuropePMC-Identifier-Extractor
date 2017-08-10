@@ -98,6 +98,7 @@
   <r p1="Rmetabolights" p2="noval" p3="" p4="" p5="">MetaboLights</r>
 
   <!-- mouse resources -->
+  <r p1="Remma" p2="noval" p3="" p4="" p5="">EMMA mouse repository</r>
 
   <!-- OLS -->
   <r p1="Rols" p2="noval" p3="" p4="" p5="">Ontology Lookup Service</r>

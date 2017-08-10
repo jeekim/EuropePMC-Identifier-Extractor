@@ -38,6 +38,7 @@ public class AccResolver extends Resolver implements Resolvable {
      }
      // String query = "ebisearch/ws/rest/" + domain + "?query=" + accno;
      String query = "ebisearch/ws/rest/" + domain + "?query=" + "acc:\"" + accno + "\"%20OR%20id:\"" + accno + "\"";
+     // System.err.println(query);
      URL url = toURL(query);
      try (BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()))) {
        String line;

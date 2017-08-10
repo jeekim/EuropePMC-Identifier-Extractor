@@ -85,6 +85,7 @@
   <r p1="metabolights" p2="onlineWithContext" p3="metabolights" p4="(?i)(metabolights|accession|repository)" p5="20000">MTBLS[0-9]+</r>
 
   <!-- N mouse resources -->
+  <r p1="emma" p2="contextOnly" p3="emma" p4="(?i)(emma|accession|repository)" p5="20000">EM:[0-9][0-9][0-9][0-9][0-9]</r>
 
 
   <!-- N ols -->
@@ -149,6 +150,9 @@
 
   <!-- bioproject -->
   <r p1="bioproject" p2="onlineWithContext" p3="project" p4="(?i)(bioproject|accession|archive)" p5="20000">PRJ[DEN][A-Z][0-9]+</r>
+
+  <!-- gca -->
+  <r p1="gca" p2="onlineWithContext" p3="genome_assembly" p4="" p5="20000">GCA_[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]([.][0-9]+)?</r>
 
   <!-- treefam -->
   <r p1="treefam" p2="onlineWithContext" p3="treefam" p4="(?i)(treefam|tree|family|accession|dendrogram)" p5="20000">TF[0-9][0-9][0-9][0-9][0-9][0-9]</r>

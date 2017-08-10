@@ -44,6 +44,10 @@ class ResolverSpec extends FlatSpec with Matchers {
     new AccResolver().isValid("reactome", "R-HSA-3108232") should be (true)
   }
 
+  "isValid" should "validate as GCA_000242695.1 true" in {
+    new AccResolver().isValid("genome_assembly", "GCA_000242695.1") should be (true)
+  }
+
   "isValid" should "validate as EFO:0000647 true" in {
     new AccResolver().isValid("efo", "EFO:0000647 ") should be (true)
   }
@@ -54,6 +58,10 @@ class ResolverSpec extends FlatSpec with Matchers {
 
   "isCachedValid" should "validate pfam, pf00003333 as false" in {
     AnnotationFilter.isIdValidInCache("pfam", "pf00003333", "pfam") should be (false)
+  }
+
+  "isOnlineValid" should "validate genome_assembly, GCA_000242695.1 as true" in {
+    AnnotationFilter.isOnlineValid("gca", "GCA_000242695.1", "genome_assembly") should be (true)
   }
 
   "normalizeID" should "normalizes 12345.3 to 12345" in {
