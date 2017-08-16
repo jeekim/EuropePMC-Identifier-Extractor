@@ -27,6 +27,11 @@ You need to create a dictionary based on mwt format and format your input docume
 </mwt>
 ```
 
+- valmethod: noval (no validation), contextOnly (keyword-based constraints), onlineWithContext (keyword-based constraints and online validation using online validation.)
+- domain: one of domain identifier mentioned in https://www.ebi.ac.uk/ebisearch/overview.ebi
+- context: a list of keywords
+- wsize: the size of window on the left side of a matched term
+
 #### How to build a dictionary?
 
 - from owl
