@@ -1,0 +1,25 @@
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX owl: <http://www.w3.org/2002/07/owl#>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+SELECT DISTINCT ?psubject ?flag ?lname ?leaf ?type
+
+WHERE {
+  {?subject rdfs:subClassOf+ <http://purl.obolibrary.org/obo/CHEBI_24431> . BIND ("ce" AS ?type) .} UNION
+  {?subject rdfs:subClassOf+ <http://purl.obolibrary.org/obo/CHEBI_50906> . BIND ("r" AS ?type) .} UNION
+  {?subject rdfs:subClassOf+ <http://purl.obolibrary.org/obo/CHEBI_36342> . BIND ("sp" AS ?type) .}
+
+  {?subject rdfs:label ?name . BIND ("0" AS ?flag) .} UNION
+  {?subject <http://purl.obolibrary.org/obo#Synonym> ?name . BIND ("1" AS ?flag) .}
+
+  FILTER (isLiteral(?name))
+  FILTER (STRLEN(?name) > 3)
+  FILTER (!regex(?name, "http"))
+
+  BIND (LCASE(str(?name)) AS ?lname )
+  BIND (not exists{?y rdfs:subClassOf ?subject} AS ?leaf)
+  BIND (strafter(str(?subject), "obo/") as ?psubject)
+}
+
+ORDER BY ?psubject
