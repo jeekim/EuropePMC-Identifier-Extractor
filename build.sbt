@@ -20,13 +20,13 @@ lazy val root = (project in file("."))
 lazy val testPMC = taskKey[Unit]("Prints 'PMC test results'")
 testPMC := {
   "cat corpora/PMC4969258_PMC4986126.xml" #|
-  "java -XX:+UseSerialGC -cp lib/monq-1.7.1.jar:lib/pmcxslpipe.jar ebi.ukpmc.xslpipe.Pipeline -stdpipe -stageSpotText" #|
-  "java -XX:+UseSerialGC -cp lib/monq-1.7.1.jar:lib/pmcxslpipe.jar ebi.ukpmc.xslpipe.Pipeline -stdpipe -outerText" #|
+  "java -XX:+UseSerialGC -cp lib/monq-2.0.2.jar:lib/pmcxslpipe.jar ebi.ukpmc.xslpipe.Pipeline -stdpipe -stageSpotText" #|
+  "java -XX:+UseSerialGC -cp lib/monq-2.0.2.jar:lib/pmcxslpipe.jar ebi.ukpmc.xslpipe.Pipeline -stdpipe -outerText" #|
   "java -XX:+UseSerialGC -cp lib/Sentenciser.jar ebi.ukpmc.sentenciser.Sentencise -rs '<article[^>]+>' -ok -ie UTF-8 -oe UTF-8" #|
-  "java -cp lib/monq-1.7.1.jar monq.programs.DictFilter -t elem -e plain -ie UTF-8 -oe UTF-8 automata/acc170731.mwt" #|
-  "java -cp lib/monq-1.7.1.jar monq.programs.DictFilter -t elem -e plain -ie UTF-8 -oe UTF-8 automata/resources170731.mwt" #|
+  "java -cp lib/monq-2.0.2.jar monq.programs.DictFilter -t elem -e plain -ie UTF-8 -oe UTF-8 automata/acc170731.mwt" #|
+  "java -cp lib/monq-2.0.2.jar monq.programs.DictFilter -t elem -e plain -ie UTF-8 -oe UTF-8 automata/resources170731.mwt" #|
   "java -cp target/scala-2.10/AnnotationFilter-assembly-v1.1.jar ukpmc.AnnotationFilter -stdpipe" #| // #> file("corpora/PMC4969258_PMC4986126.ann") !
-  "java -cp lib/monq-1.7.1.jar monq.programs.Grep -r '<z:acc[^>]+>' '</z:acc>' -cr -co -rf '%0<xtext>' '</xtext>%0'" #> file("corpora/PMC4969258_PMC4986126.ann") !
+  "java -cp lib/monq-2.0.2.jar monq.programs.Grep -r '<z:acc[^>]+>' '</z:acc>' -cr -co -rf '%0<xtext>' '</xtext>%0'" #> file("corpora/PMC4969258_PMC4986126.ann") !
 }
 // "java -cp target/scala-2.10/AnnotationFilter-assembly-v1.1.jar ukpmc.Pipeline -xml2summary" #> file("corpora/PMC4969258_PMC4986126.ann") !
 
@@ -34,21 +34,21 @@ testPMC := {
 lazy val testERC = taskKey[Unit]("Prints 'ERC test results'")
 testERC := {
   "cat test/ercfunds.txt" #|
-	"java -cp lib/monq-1.7.1.jar monq.programs.DictFilter -t elem -e plain -ie UTF-8 -oe UTF-8 automata/grants150714.mwt" #|
+	"java -cp lib/monq-2.0.2.jar monq.programs.DictFilter -t elem -e plain -ie UTF-8 -oe UTF-8 automata/grants150714.mwt" #|
 	"java -cp target/scala-2.10/AnnotationFilter-assembly-v1.1.jar ukpmc.AnnotationFilter -stdpipe" !
 }
 
 lazy val testAcc = taskKey[Unit]("Prints 'Acc test results'")
 testAcc := {
   "cat test/accnums.txt" #|
-	"java -cp lib/monq-1.7.1.jar monq.programs.DictFilter -t elem -e plain -ie UTF-8 -oe UTF-8 automata/acc150612.mwt" #|
+	"java -cp lib/monq-2.0.2.jar monq.programs.DictFilter -t elem -e plain -ie UTF-8 -oe UTF-8 automata/acc150612.mwt" #|
 	"java -cp target/scala-2.10/AnnotationFilter-assembly-v1.1.jar ukpmc.AnnotationFilter -stdpipe" !
 }
 
 lazy val testResource = taskKey[Unit]("Prints 'Resource test results'")
 testResource := {
 	"cat test/accnums.txt" #|
-	"java -cp lib/monq-1.7.1.jar monq.programs.DictFilter -t elem -e plain -ie UTF-8 -oe UTF-8 automata/resources170405.mwt" #|
+	"java -cp lib/monq-2.0.2.jar monq.programs.DictFilter -t elem -e plain -ie UTF-8 -oe UTF-8 automata/resources170405.mwt" #|
 	"java -cp target/scala-2.10/AnnotationFilter-assembly-v1.1.jar ukpmc.AnnotationFilter -stdpipe" !
 }
 
@@ -66,13 +66,19 @@ generateChEBI := {
   // ChEBI need a big memory for arq
 	"rdfparse /home/jee/Downloads/chebi.owl" #>
 	file("/tmp/xxxyyyzzz.ttl") #&&
-	"arq --data=/tmp/xxxyyyzzz.ttl --query=sparql/chebi.rq --results=TSV" #|
+	"arq -Xms1024m -Xmx1024m --data=/tmp/xxxyyyzzz.ttl --query=sparql/chebi.rq --results=TSV" #|
 	"bin/chebi.rb" #>
 	file("automata/chebi.mwt") !
 }
 
 lazy val generateGO = taskKey[Unit]("Generate GO dictionary")
-generateGO := {}
+generateGO := {
+	"rdfparse owl/go.owl" #>
+	file("/tmp/xxxyyyzzz.ttl") #&&
+	"arq --data=/tmp/xxxyyyzzz.ttl --query=sparql/go.rq --results=TSV" #|
+	"bin/go.rb" #>
+	file("automata/go.mwt") !
+}
 
 lazy val generateDOID = taskKey[Unit]("Generate DOID dictionary")
 generateDOID := {
