@@ -64,7 +64,7 @@ generateEFO := {
 lazy val generateChEBI = taskKey[Unit]("Generate ChEBI dictionary")
 generateChEBI := {
   // ChEBI need a big memory for arq
-	"rdfparse /home/jee/Downloads/chebi.owl" #>
+	"rdfparse owl/chebi.owl" #>
 	file("/tmp/xxxyyyzzz.ttl") #&&
 	"arq -Xms1024m -Xmx1024m --data=/tmp/xxxyyyzzz.ttl --query=sparql/chebi.rq --results=TSV" #|
 	"bin/chebi.rb" #>
