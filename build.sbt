@@ -64,9 +64,10 @@ generateEFO := {
 lazy val generateChEBI = taskKey[Unit]("Generate ChEBI dictionary")
 generateChEBI := {
   // ChEBI need a big memory for arq
+  // export JVM_ARGS="-Xms4G -Xmx4G"
 	"rdfparse owl/chebi.owl" #>
 	file("/tmp/xxxyyyzzz.ttl") #&&
-	"arq -Xms1024m -Xmx1024m --data=/tmp/xxxyyyzzz.ttl --query=sparql/chebi.rq --results=TSV" #|
+	"arq --data=/tmp/xxxyyyzzz.ttl --query=sparql/chebi.rq --results=TSV" #|
 	"bin/chebi.rb" #>
 	file("automata/chebi.mwt") !
 }
