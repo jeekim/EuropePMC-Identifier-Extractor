@@ -1,5 +1,5 @@
 <mwt>
-  <template><z:acc db="%1" valmethod="%2" domain="%3" context="%4" wsize="%5">%0</z:acc></template>
+  <template><z:acc db="%1" valmethod="%2" domain="%3" context="%4" wsize="%5" sec="%6">%0</z:acc></template>
 
   <!-- arrayexpress -->
   <r p1="arrayexpress" p2="onlineWithContext" p3="geneExpression" p4="(?i)(arrayexpress|atlas|gxa|accession|experiment)" p5="20000">E\-[A-Z][A-Z][A-Z][A-Z]\-[0-9]+</r>
@@ -129,7 +129,7 @@
   <r p1="hipsci" p2="contextOnly" p3="" p4="(\bcell\b|sample|iPSC|iPSCs|iPS|fibroblast|fibroblasts|QTL|eQTL|pluripotent|induced|\bdonor\b|\bstem\b|EBiSC|1000 Genomes|Coriell|\bLCL\b|lymphoblastoid)" p5="20000">HPSI[0-9][0-9][0-9][0-9](i|pf)\-[a-z]+_[0-9]+</r>
 
   <!-- omim -->
-  <r p1="omim" p2="onlineWithContext" p3="omim" p4="(?i)(o*mim|syndrome|disease|deficiency)" p5="20000">[0-9][0-9][0-9][0-9][0-9][0-9]</r>
+  <r p1="omim" p2="onlineWithContext" p3="omim" p4="(?i)(o*mim|syndrome|disease|deficiency)" p5="20000" p6="INTRO">[0-9][0-9][0-9][0-9][0-9][0-9]</r>
 
   <!-- refseq -->
   <r p1="refseq" p2="onlineWithContext" p3="" p4="(?i)(refseq|genbank|accession|sequence)" p5="20000">(AC|AP|NC|NG|NM|NP|NR|NT|NW|NZ|XM|XP|XR|YP|ZP|NS)_([A-Z][A-Z][A-Z][A-Z])*[0-9][0-9][0-9][0-9][0-9][0-9][0-9]?[0-9]?[0-9]?([.][0-9]+)?</r>

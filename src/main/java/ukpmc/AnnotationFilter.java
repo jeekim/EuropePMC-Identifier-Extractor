@@ -288,7 +288,8 @@ public class AnnotationFilter implements Service {
          loadPredefinedResults();
 
          Nfa bnfa = new Nfa(Nfa.NOTHING);
-         bnfa // .or(Xml.GoofedElement("SecTag"), procBoundary)
+         bnfa.or(Xml.GoofedElement("SecTag"), procBoundary)
+         // bnfa // .or(Xml.GoofedElement("SecTag"), procBoundary)
          .or(Xml.GoofedElement("SENT"), procBoundary);
          dfa_boundary = bnfa.compile(DfaRun.UNMATCHED_COPY);
 
