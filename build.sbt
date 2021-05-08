@@ -3,7 +3,7 @@ import sbt.complete.DefaultParsers._
 
 // assemblySettings
 
-libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.4" % "test"
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.7" % "test"
 libraryDependencies += "org.specs2" %% "specs2-core" % "4.10.2" % "test"
 libraryDependencies += "org.specs2" %% "specs2-gwt" % "4.7.1" % "test"
 libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.12.5" % "test"
