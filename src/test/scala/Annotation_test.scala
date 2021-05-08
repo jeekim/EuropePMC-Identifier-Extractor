@@ -2,8 +2,10 @@ package ukpmc
 
 import monq.jfa._
 import org.scalatest._
+import flatspec._
+import matchers._
 
-class AnnotationSpec extends FlatSpec with Matchers {
+class AnnotationSpec extends AnyFlatSpec with should.Matchers {
 
   "dfa_boundary" should "validate ..." in {
     val dfaRun = new DfaRun(AnnotationFilter.dfa_boundary)
