@@ -2,7 +2,7 @@ package ukpmc
 
 import org.scalatest._
 
-class ResolverSpec extends FlatSpec with Matchers {
+class ResolverSpec extends AnyFlatSpec with should.Matchers {
   "doiResolver.isValidID" should "validate 10.5061/dryad.pk045 as true" in {
     val doiResolver = new DoiResolver
     doiResolver.isValid("doi", "10.5061/dryad.pk045") should be (true)
