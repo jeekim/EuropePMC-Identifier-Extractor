@@ -6,7 +6,7 @@ import sbt.complete.DefaultParsers._
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.7" % "test"
 libraryDependencies += "org.specs2" %% "specs2-core" % "4.10.2" % "test"
 libraryDependencies += "org.specs2" %% "specs2-gwt" % "4.7.1" % "test"
-libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.12.5" % "test"
+libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.15.2" % "test"
 
 scalacOptions in (Compile,doc) := Seq("-groups", "-implicits")
 scalacOptions in Test ++= Seq("-Yrangepos")
