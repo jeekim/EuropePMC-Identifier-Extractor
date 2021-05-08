@@ -5,7 +5,7 @@ import sbt.complete.DefaultParsers._
 
 libraryDependencies += "org.scalatest" %% "scalatest" % "2.2.4" % "test"
 libraryDependencies += "org.specs2" %% "specs2-core" % "3.6.6" % "test"
-libraryDependencies += "org.specs2" %% "specs2-gwt" % "3.6.6" % "test"
+libraryDependencies += "org.specs2" %% "specs2-gwt" % "4.7.1" % "test"
 libraryDependencies += "org.scalacheck" %% "scalacheck" % "1.12.5" % "test"
 
 scalacOptions in (Compile,doc) := Seq("-groups", "-implicits")
