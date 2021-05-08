@@ -1,6 +1,8 @@
 package ukpmc
 
 import org.scalatest._
+import flatspec._
+import matchers._
 
 class ResolverSpec extends AnyFlatSpec with should.Matchers {
   "doiResolver.isValidID" should "validate 10.5061/dryad.pk045 as true" in {
