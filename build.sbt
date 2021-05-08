@@ -17,19 +17,19 @@ lazy val root = (project in file("."))
     version := "v1.1"
   )
 
-// lazy val testPMC = taskKey[Unit]("Prints 'PMC test results'")
-// testPMC := {
-//   "cat corpora/PMC4969258_PMC4986126.xml" #|
-//   "java -XX:+UseSerialGC -cp lib/monq-2.0.2.jar:lib/pmcxslpipe.jar ebi.ukpmc.xslpipe.Pipeline -stdpipe -stageSpotText" #|
-//   "java -XX:+UseSerialGC -cp lib/monq-2.0.2.jar:lib/pmcxslpipe.jar ebi.ukpmc.xslpipe.Pipeline -stdpipe -outerText" #|
-//   "java -XX:+UseSerialGC -cp lib/Sentenciser.jar ebi.ukpmc.sentenciser.Sentencise -rs '<article[^>]+>' -ok -ie UTF-8 -oe UTF-8" #|
-//   "java -cp lib/monq-2.0.2.jar monq.programs.DictFilter -t elem -e plain -ie UTF-8 -oe UTF-8 automata/acc170731.mwt" #|
-//   "java -cp lib/monq-2.0.2.jar monq.programs.DictFilter -t elem -e plain -ie UTF-8 -oe UTF-8 automata/resources170731.mwt" #|
-//   "java -cp target/scala-2.10/AnnotationFilter-assembly-v1.1.jar ukpmc.AnnotationFilter -stdpipe" #| // #> file("corpora/PMC4969258_PMC4986126.ann") !
-//   "java -cp lib/monq-2.0.2.jar monq.programs.Grep -r '<z:acc[^>]+>' '</z:acc>' -cr -co -rf '%0<xtext>' '</xtext>%0'" #> file("corpora/PMC4969258_PMC4986126.ann") !
-// }
+/*
+lazy val testPMC = taskKey[Unit]("Prints 'PMC test results'")
+testPMC := {
+  "cat corpora/PMC4969258_PMC4986126.xml" #|
+  "java -XX:+UseSerialGC -cp lib/monq-2.0.2.jar:lib/pmcxslpipe.jar ebi.ukpmc.xslpipe.Pipeline -stdpipe -stageSpotText" #|
+  "java -XX:+UseSerialGC -cp lib/monq-2.0.2.jar:lib/pmcxslpipe.jar ebi.ukpmc.xslpipe.Pipeline -stdpipe -outerText" #|
+  "java -XX:+UseSerialGC -cp lib/Sentenciser.jar ebi.ukpmc.sentenciser.Sentencise -rs '<article[^>]+>' -ok -ie UTF-8 -oe UTF-8" #|
+  "java -cp lib/monq-2.0.2.jar monq.programs.DictFilter -t elem -e plain -ie UTF-8 -oe UTF-8 automata/acc170731.mwt" #|
+  "java -cp lib/monq-2.0.2.jar monq.programs.DictFilter -t elem -e plain -ie UTF-8 -oe UTF-8 automata/resources170731.mwt" #|
+  "java -cp target/scala-2.10/AnnotationFilter-assembly-v1.1.jar ukpmc.AnnotationFilter -stdpipe" #| // #> file("corpora/PMC4969258_PMC4986126.ann") !
+  "java -cp lib/monq-2.0.2.jar monq.programs.Grep -r '<z:acc[^>]+>' '</z:acc>' -cr -co -rf '%0<xtext>' '</xtext>%0'" #> file("corpora/PMC4969258_PMC4986126.ann") !
+}
 // "java -cp target/scala-2.10/AnnotationFilter-assembly-v1.1.jar ukpmc.Pipeline -xml2summary" #> file("corpora/PMC4969258_PMC4986126.ann") !
-
 
 lazy val testERC = taskKey[Unit]("Prints 'ERC test results'")
 testERC := {
@@ -141,3 +141,5 @@ annotate := {
 	// s"ssh $account cd ~; rm -rf $toDir; mkdir $toDir; run_pipeline xml 170725sec $to annotation $date $test_date | head -1 | sh" !
 	// s"ssh $account cd ~; rm -rf $toDir; mkdir $toDir; run_pipeline xml source $to annotation $date $test_date | head -1 | sh" !
 }
+
+*/
