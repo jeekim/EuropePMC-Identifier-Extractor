@@ -3,8 +3,10 @@ package ukpmc
 import ukpmc._
 import monq.jfa._
 import org.scalatest._
+import flatspec._
+import matchers._
 
-class DictionaryBuilderSpec extends FlatSpec with Matchers {
+class DictionaryBuilderSpec extends AnyFlatSpec with should.Matchers {
 
   // generate an mwt file given a tsv file
 
